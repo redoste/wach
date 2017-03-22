@@ -131,12 +131,29 @@ WACH.prototype.GetQuestion = function (id) {
 	@settings(ans)=(string) reponse
 	@settings(sid)=(int) sid de la reponse
 */
-WACH.prototype.EditAwnser = function (id, ans, sid) {
-	//Pour les TAT
+WACH.prototype.EditAwnser = function (id, ans, sid = 0) {
 	if(this.GetType() == TYPE_TAT)	I[id][1][0][0] = ans;
 	if(this.GetType() == TYPE_QUIZ)	I[id][3][0][0] = ans;
 	if(this.GetType() == TYPE_QCM){
-		
+		//Vrai
+		if(ans){
+			//Config
+			I[id][3][sid][2] = 1;
+			I[id][3][sid][3] = 100;
+			I[id][3][sid][4] = 1;
+			I[id][3][sid][1] = DefaultRight;
+		}
+		//Faux
+		else{
+			//Config
+			I[id][3][sid][2] = 0;
+			I[id][3][sid][3] = 0;
+			I[id][3][sid][4] = 1;
+			I[id][3][sid][1] = DefaultWrong;
+		}
+	}
+	if(this.GetType() == TYPE_MC){
+		L[id][sid] = ans
 	}
 
 };
@@ -329,6 +346,22 @@ WACHUtilClass.prototype.htmlEncode = function (txt) {
 			}
 	}
 	return s;
+};
+
+/*stringListToBoolList: transforme une string -> "true,false,true" en tableau [true, false, true]
+	@settings(input)=(bool) entrée
+	@return=(string) sorite
+*/
+WACHUtilClass.prototype.stringListToBoolList = function (input) {
+	//retour + split
+	var ret = [];
+	var splited = input.split(',');
+
+	//Le for
+	for (var i = 0; i<splited.length; i++){
+		if(splited[i] == "true") ret[i] = true;
+		if(splited[i] == "false") ret[i] = true;
+	}
 };
 
 //=====FIN CLASS=====
