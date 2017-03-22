@@ -5,7 +5,11 @@ var CHTESource = null;
 var CHTEPointAcc = null;
 var CHTEPointOld = null;
 var CHTEPointOldColor = null;
+var CHIESource = null;
 var CHType = null;
+
+//La version
+const CHVER = "WACH_BETA_0.5";
 
 //Fonction d'initialisation
 //0 Parametre
@@ -16,6 +20,7 @@ function CHInit(){
     //0 -> Classique
     //1 -> En atente de œ
     //2 -> En atente de TextEdit
+    //3 -> En atente de Image Edit
     
     CHType = CHGType()
     //Definis le type de jeu
@@ -126,11 +131,25 @@ function CHRKey(e){
         CHStatus = 2;
         document.getElementById('CHPWait').style = 'display: none'
     }
+    //Le I en mode Wait
+    if (e.keyCode == 73 && CHStatus == 1){
+        //On passe en mode Image Wait
+        CHStatus = 3;
+        //On masque le message de wait
+        document.getElementById('CHPWait').style = 'display: none'
+        //Et on met le message de Image Edit Wait
+        document.getElementById('CHPWaitIe').style = 'display: inline'
+    }
 }
 
 //Crée le bloc du message de wait
 //0 Parametre
 function CHPWait(){
+    //On ecrit notreCHType String
+    var TStr = "ERROR CHType not valid";
+    if (CHType == 1) var TStr = "Quizz";
+    if (CHType == 0) var TStr = "Texte a trous";
+    
     //On cree notre DIV id=CHPWait
     var mainDiv = document.createElement('div');
     mainDiv.id = 'CHPWait'
@@ -139,10 +158,17 @@ function CHPWait(){
     mainDiv.style = 'display: none'
     
     //Et on entre notre texte
-    mainDiv.appendChild(document.createTextNode('Attend Touche œ'))
+    mainDiv.appendChild(document.createTextNode('Attend Touche œ / VERSION: ' + CHVER + ' / ' + TStr))
     
     //On merge le tout a la fin du body
     document.body.appendChild(mainDiv)
+    
+    //La meme chause avec le Image Edit Wait Text
+    var ieDiv = document.createElement('div');
+    ieDiv.id = 'CHPWaitIe'
+    ieDiv.style = 'display: none'
+    ieDiv.appendChild(document.createTextNode('Attend Image Edit / VERSION: ' + CHVER + ' / ' + TStr))
+    document.body.appendChild(ieDiv)
 }
 
 //Sauvegarde les nouvelle réponse dans I
@@ -239,6 +265,16 @@ function CHRClick(e){
         CHPTeForm(e.target)
         //Et on passe en mode classique
         CHStatus = 0;
+    }
+    //Si le mode Image Edit est activé
+    if (CHStatus == 3){
+        //On ouvre le formulaire de ImageEdit
+        CHPIeForm(e.target)
+        //Et on passe en mode classique
+        CHStatus = 0;
+        //Et on retire le le message de wait
+        document.getElementById('CHPWaitIe').style = 'display: none'
+        
     }
 }
 
@@ -375,6 +411,84 @@ function CHGType(){
 //id -> id de la question
 function CHGQuizQuestion(id){
     if (CHType == 1) return document.getElementById("Q_"+id).children[0].innerText
+}
+
+//Ouvre le formulaire d'edition d'image
+//1 Parametre
+//source -> l'image de base
+//return -> le div de base du form
+function CHPIeForm(source){
+    //On sauvegarde la source
+    CHIESource = source;
+    
+    //DIv de base
+    var maindiv = document.createElement('div');
+    maindiv.id = "CHPIeForm"
+    
+    //Texte label de URL
+    maindiv.appendChild(document.createTextNode('URL: '))
+    
+    //champ de l'url
+    var urlZone = document.createElement('input')
+    urlZone.setAttribute('type', 'text')
+    //ID CHPIeForm_url VALUE l'ancienne SRC
+    urlZone.setAttribute('id', 'CHPIeForm_url')
+    urlZone.setAttribute('value', source.src);
+    //MERGE
+    maindiv.appendChild(urlZone);
+    
+    maindiv.appendChild(document.createElement('br'));
+    
+    //Boutton de sauvegarde
+    var btnSav = document.createElement('button')
+    btnSav.appendChild(document.createTextNode("SAVE"))
+    //On savegarde et utilise HideFeedback de l'api de WabAllemend
+    btnSav.setAttribute('onClick', 'CHPIeSave();HideFeedback()')
+    maindiv.appendChild(btnSav)
+    
+    maindiv.appendChild(document.createElement('br'));
+    maindiv.appendChild(document.createElement('br'));
+    
+    //Label du champ Google
+    maindiv.appendChild(document.createTextNode('GOOGLE: '))
+    
+    //Champ Google
+    var gooZone = document.createElement('input')
+    gooZone.setAttribute('type', 'text')
+    //ID CHPIeForm_google
+    gooZone.setAttribute('id', 'CHPIeForm_google')
+    maindiv.appendChild(gooZone);
+    
+    maindiv.appendChild(document.createElement('br'));
+    
+    //BOutton de recherche
+    var btnGoo = document.createElement('button')
+    btnGoo.appendChild(document.createTextNode("RECHERCHER"))
+    //On lance une recherche depuis le champ
+    btnGoo.setAttribute('onClick', 'CHGISearch(document.getElementById("CHPIeForm_google").value)')
+    maindiv.appendChild(btnGoo)
+    
+    maindiv.appendChild(document.createElement('br'));
+    maindiv.appendChild(document.createElement('br'));
+    //Texte d'aide
+    maindiv.appendChild(document.createTextNode('Pour utliser google: faites la recherche <CLIC DROIT / Copier L\'addresse de l\'image> et coller dans URL'))
+    
+    //On affiche le tout avec l'api de Web Allemend
+    ShowMessage(maindiv.innerHTML)
+    return maindiv;
+}
+
+//Recherche sur google images
+//1 parametre
+//src -> le terme a rechercher
+function CHGISearch(src){
+    window.open("https://www.google.fr/search?safe=active&tbm=isch&q=" + encodeURIComponent(src));
+}
+
+//Sauvgarde les info de CHPIeForm
+//0 Parametre
+function CHPIeSave(){
+    CHIESource.src = document.getElementById("CHPIeForm_url").value;
 }
 
 //INIT
