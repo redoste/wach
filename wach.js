@@ -5,6 +5,7 @@ var CHTESource = null;
 var CHTEPointAcc = null;
 var CHTEPointOld = null;
 var CHTEPointOldColor = null;
+var CHType = null;
 
 //Fonction d'initialisation
 //0 Parametre
@@ -15,6 +16,9 @@ function CHInit(){
     //0 -> Classique
     //1 -> En atente de œ
     //2 -> En atente de TextEdit
+    
+    CHType = CHGType()
+    //Definis le type de jeu
     
     CHTEPointOld = document.body
     CHTEPointOldColor = document.body.style['background-color']
@@ -39,7 +43,8 @@ function CHInit(){
 //id -> id de la réponse a lire
 //return -> la reponse
 function CHGAn(id){
-    return I[id][1][0][0]
+    if (CHType == 0) return I[id][1][0][0]
+    if (CHType == 1) return I[id][3][0][0]
 }
 
 //Lis toute les réponse
@@ -73,6 +78,8 @@ function CHPAns(){
         mainDiv.appendChild(document.createTextNode('Rep N'))
         mainDiv.appendChild(document.createTextNode(i))
         mainDiv.appendChild(document.createTextNode(': '))
+        //Si on est dans un quizz on affiche la question
+        if (CHType == 1)    mainDiv.appendChild(document.createTextNode('('+CHGQuizQuestion(i)+') '))
         //Et son contenu
         mainDiv.appendChild(document.createTextNode(ans[i]))
         //+ A la ligne
@@ -142,10 +149,19 @@ function CHPWait(){
 //1 Parametre
 //NAns -> Tableau de string -> Chaque réponse
 function CHPEditSave(NAns){
-    //Pour chaque entrée de NAns
-    for (var i=0; i<NAns.length; i++){
-        //On s'écrit dans I
-        I[i][1][0][0] = NAns[i]
+    //En mode TAT
+    if (CHType == 0){
+        //Pour chaque entrée de NAns
+        for (var i=0; i<NAns.length; i++){
+            //On s'écrit dans I
+            I[i][1][0][0] = NAns[i]
+        }
+    }if (CHType == 1){
+            //Pour chaque entrée de NAns
+        for (var i=0; i<NAns.length; i++){
+            //On s'écrit dans I
+            I[i][3][0][0] = NAns[i]
+        }
     }
 }
 
@@ -164,6 +180,9 @@ function CHPEditForm(){
     for (var i = 0; i < ans.length; i++){
         //On marque l'ancienne réponse
         mainDiv.appendChild(document.createTextNode(ans[i] + "->"))
+        
+        //Si on est dans un quizz on met la question
+        if (CHType == 1)    mainDiv.appendChild(document.createTextNode('('+CHGQuizQuestion(i)+') '))
         
         //On met le champ de texte avec value=L'anciienne réponse et ID=CHPEditForm_Q + l'id de la question
         mainDiv.innerHTML += '<input type="text" value="' + ans[i] + '" id="CHPEditForm_Q'+ i +'"\>'
@@ -335,6 +354,27 @@ function CHRMove(e){
         CHTEPointOldColor = document.body.style['background-color']
         CHTEPointAcc = null;
     }
+}
+
+//Detecte le type de jeu
+//0 parametre
+//return -> le type de jeu
+//  0 -> Texte a trous
+//  1 -> Quiz
+function CHGType(){
+    if (typeof I[0][1] == "string"){
+        return 1
+    }else{
+        return 0
+    }
+}
+
+//Recupere la question d'un quizz a partir de l'id
+//1 parametre
+//return -> la question
+//id -> id de la question
+function CHGQuizQuestion(id){
+    if (CHType == 1) return document.getElementById("Q_"+id).children[0].innerText
 }
 
 //INIT
