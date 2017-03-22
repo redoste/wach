@@ -3,25 +3,49 @@
     <head>
         <title> WACH - WebAllemendCHeat </title>
         <meta charset="UTF-8"/>
+        <script>
+            function renderBranch(branchName){
+                var url = "https://raw.githubusercontent.com/jubcsc/wach/"+ branchName + "/wach.js";
+                thirdpartswitch(url);
+            }
+            function renderCommit(){
+                var commit = document.getElementById("commit").value;
+                var url = "https://raw.githubusercontent.com/jubcsc/wach/"+ commit +"/wach.js";
+                thirdpartswitch(url);
+            }
+            function thirdpartswitch(url){
+                document.getElementById("SecondPart").style.display = 'none';
+                document.getElementById("ThirdPart").style.display = 'inline';
+                document.getElementById("ThirdPartLink").href = url;
+            }
+        </script>
     </head>
     <body>
         <p>
             <h1>WACH - WebAllemendCHeat</h1>
             <h2>Instaleur</h2>
             <a href="LICENSE">Liscence</a>
-        </p>
-        
-        <p>
-            <h4>Mode Branche</h4>
-            <a href="#">master</a><br/>
-            <a href="#">beta</a><br/>
-            <a href="#">nightly</a><br/>
-        </p>
-        
-        <p>
-            <h4>Mode commit</h4>
-            SHA: <input type="text"/> <button>OK</button><br/>
-        </p>
+        </p>    
+        <div id="SecondPart">
+            <p>
+                <h4>Mode Branche</h4>
+                <a href="#" onclick="renderBranch('master')">master</a><br/>
+                <a href="#" onclick="renderBranch('beta')">beta</a><br/>
+                <a href="#" onclick="renderBranch('nightly')">nightly</a><br/>
+            </p>
+            
+            <p>
+                <h4>Mode commit</h4>
+                SHA: <input type="text" id="commit"/> <button onclick="renderCommit()">OK</button><br/>
+            </p>
+        </div>
+        <div id="ThirdPart" style="display: none">
+            <p>
+                <a href="#" id="ThirdPartLink">ADD</a><br/>
+                <a href="#" onclick="document.location.reload(true)">Refresh</a><br/>
+                <br/>
+            </p>
+        </div>
         
         Oui c'est très moche...
     </body>
