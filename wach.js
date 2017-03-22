@@ -9,7 +9,7 @@ var CHIESource = null;
 var CHType = null;
 
 //La version
-const CHVER = "WACH_BETA_0.5";
+const CHVER = "WACH_BETA_0.6";
 
 //Fonction d'initialisation
 //0 Parametre
@@ -47,9 +47,10 @@ function CHInit(){
 //1 Parametres
 //id -> id de la réponse a lire
 //return -> la reponse
-function CHGAn(id){
+function CHGAn(id, sid = 0){
     if (CHType == 0) return I[id][1][0][0]
     if (CHType == 1) return I[id][3][0][0]
+    if (CHType == 2) return CHGStrTBool(I[id][3][sid][1])
 }
 
 //Lis toute les réponse
@@ -58,10 +59,27 @@ function CHGAn(id){
 function CHGAns(){
     //tableau de sortie
     var ret = [];
-    //Pour chaque réponse (Entrée dans I)
-    for (var i=0; i<I.length; i++){
-        //On utilise CHGAn et écris dans ret
-        ret[i] = CHGAn(i);
+    //Pour les Quizz et TAT
+    if (CHType == 0 || CHType == 1){
+        //Pour chaque réponse (Entrée dans I)
+        for (var i=0; i<I.length; i++){
+            //On utilise CHGAn et écris dans ret
+            ret[i] = CHGAn(i);
+        }
+    }
+    //Pour les QCM
+    if (CHType == 2){
+        //Pour chaque question
+        for (var i=0; i < I.length; i++){
+            //On fait le bloc que Question
+            var QBloc = [];
+            //On for les response
+            for (var j=0; j < I[i][3].length; j++){
+                QBloc[j] = CHGAn(i, j);
+            }
+            //on save
+            ret[i] = QBloc;
+        }
     }
     return ret;
 }
@@ -77,16 +95,29 @@ function CHPAns(){
     var mainDiv = document.createElement('div');
     mainDiv.id = 'CHPAns_div';
     
+    //En QCM on ajoute un texte d'aide
+    if (CHType == 2){
+        mainDiv.appendChild(document.createTextNode('true -> vrai false -> faux'))
+        mainDiv.appendChild(document.createElement('br'))
+    }
+    
     //Pour chaque réponse
     for (var i=0; i<ans.length; i++){
         //On affiche le numéro de la réponse
         mainDiv.appendChild(document.createTextNode('Rep N'))
         mainDiv.appendChild(document.createTextNode(i))
         mainDiv.appendChild(document.createTextNode(': '))
-        //Si on est dans un quizz on affiche la question
-        if (CHType == 1)    mainDiv.appendChild(document.createTextNode('('+CHGQuizQuestion(i)+') '))
+        //Si on est dans un quizz ou un QCM on affiche la question
+        if (CHType == 1 || CHType == 2) mainDiv.innerHTML += "<button onClick=\"alert('"+html_encode(CHGQuizQuestion(i))+"')\">Q</button>"
         //Et son contenu
-        mainDiv.appendChild(document.createTextNode(ans[i]))
+        //En mode Quizz / TAT
+        if (CHType == 1 || CHType == 0) mainDiv.appendChild(document.createTextNode(ans[i]))
+        //QCM
+        if (CHType == 2){
+            for (var j = 0; j < ans[i].length; j++){
+                mainDiv.appendChild(document.createTextNode(ans[i][j] + " "))
+            }
+        }
         //+ A la ligne
         mainDiv.appendChild(document.createElement('br'))
     }
@@ -149,6 +180,7 @@ function CHPWait(){
     var TStr = "ERROR CHType not valid";
     if (CHType == 1) var TStr = "Quizz";
     if (CHType == 0) var TStr = "Texte a trous";
+    if (CHType == 2) var TStr = "QCM";
     
     //On cree notre DIV id=CHPWait
     var mainDiv = document.createElement('div');
@@ -188,6 +220,32 @@ function CHPEditSave(NAns){
             //On s'écrit dans I
             I[i][3][0][0] = NAns[i]
         }
+    }if (CHType == 2){
+        //Pour chaque question
+        for (var i=0; i<NAns.length; i++){
+            //On parse
+            var parsed = CHGParseBool(NAns[i]);
+            //Pour chaque reponse
+            for (var j=0; j<I[i][3].length; j++){
+                //Vrai
+                if(parsed[j]){
+                    //On met les cofig de calcul
+                    I[i][3][j][2] = 1;
+                    I[i][3][j][3] = 100;
+                    I[i][3][j][4] = 1;
+                    //Et de texte
+                    I[i][3][j][1] = DefaultRight;
+                }//faux
+                else{
+                    //On met les cofig de calcul
+                    I[i][3][j][2] = 0;
+                    I[i][3][j][3] = 0;
+                    I[i][3][j][4] = 1;
+                    //Et de texte
+                    I[i][3][j][1] = DefaultWrong;
+                }
+            }
+        }
     }
 }
 
@@ -207,8 +265,8 @@ function CHPEditForm(){
         //On marque l'ancienne réponse
         mainDiv.appendChild(document.createTextNode(ans[i] + "->"))
         
-        //Si on est dans un quizz on met la question
-        if (CHType == 1)    mainDiv.appendChild(document.createTextNode('('+CHGQuizQuestion(i)+') '))
+        //Si on est dans un quizz / QCM on met la question
+        if (CHType == 1 || CHType == 2) mainDiv.innerHTML += "<button onClick=\"alert('"+html_encode(CHGQuizQuestion(i))+"')\">Q</button>"
         
         //On met le champ de texte avec value=L'anciienne réponse et ID=CHPEditForm_Q + l'id de la question
         mainDiv.innerHTML += '<input type="text" value="' + ans[i] + '" id="CHPEditForm_Q'+ i +'"\>'
@@ -397,20 +455,22 @@ function CHRMove(e){
 //return -> le type de jeu
 //  0 -> Texte a trous
 //  1 -> Quiz
+//  2 -> QCM
 function CHGType(){
     if (typeof I[0][1] == "string"){
-        return 1
+        if(I[0][3].length == 1) return 1
+        else return 2
     }else{
         return 0
     }
 }
 
-//Recupere la question d'un quizz a partir de l'id
+//Recupere la question d'un quizz a partir de l'id (Aussi le QCM en fait...)
 //1 parametre
 //return -> la question
 //id -> id de la question
 function CHGQuizQuestion(id){
-    if (CHType == 1) return document.getElementById("Q_"+id).children[0].innerText
+    if (CHType == 1 || CHType == 2) return document.getElementById("Q_"+id).children[0].innerText
 }
 
 //Ouvre le formulaire d'edition d'image
@@ -489,6 +549,52 @@ function CHGISearch(src){
 //0 Parametre
 function CHPIeSave(){
     CHIESource.src = document.getElementById("CHPIeForm_url").value;
+}
+
+//Return true si c'est le texte d'une réponse juste
+//return -> true juste
+//       -> false faut
+function CHGStrTBool(string){
+    if (string == DefaultRight) return true
+    else return false
+}
+
+//Parse de l'html <source http://codes-sources.commentcamarche.net/source/54146-parser-les-caracteres-html-d-une-string >
+//Mrc a eux!
+function html_encode(txt) {
+    var reg = /^[\w-\/()\[\]?!*%:;.,'\s]+$/i;
+    var s = "";
+    var l = txt.length;
+    for (var i = 0; i < l; i++) {
+        var tn = txt[i];
+        //EDIT Ajout du '
+        if (tn == "'"){
+            s+= "\\'"
+        }
+        else if (!reg.test(tn)) {
+            s += "&#" + tn.charCodeAt(0) + ";";
+        } else {
+            s += tn;
+        }
+    }
+    return s;
+}
+
+//Parse du texte de l'edit mode QCM en aurray
+//1 Parametre
+// inp -> string d'entree
+// return -> tabbleau de bool
+function CHGParseBool (inp){
+    //Retour et split par ,
+    var ret = []
+    var splited = inp.split(',')
+    
+    //on for
+    for (var i=0; i<splited.length; i++){
+        if (splited[i] == "true") ret[i] = true;
+        if (splited[i] == "false") ret[i] = false;
+    }
+    return ret
 }
 
 //INIT
