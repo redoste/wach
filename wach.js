@@ -9,7 +9,7 @@ var CHIESource = null;
 var CHType = null;
 
 //La version
-const CHVER = "WACH_BETA_0.6";
+const CHVER = "WACH_BETA_0.7";
 
 //Fonction d'initialisation
 //0 Parametre
@@ -51,6 +51,7 @@ function CHGAn(id, sid = 0){
     if (CHType == 0) return I[id][1][0][0]
     if (CHType == 1) return I[id][3][0][0]
     if (CHType == 2) return CHGStrTBool(I[id][3][sid][1])
+    if (CHType == 3) return L[id][sid]
 }
 
 //Lis toute les réponse
@@ -81,6 +82,18 @@ function CHGAns(){
             ret[i] = QBloc;
         }
     }
+    //Pour les MotsCroisé
+    if (CHType == 3){
+        //On s'embete Pas!
+        //ret = L;
+        //Non! Réecriture complete pour eviter le LINK
+        for (var i = 0; i<L.length; i++){
+            ret[i] = []
+            for(var j = 0; j<L[i].length; j++){
+                ret[i][j] = L[i][j]
+            }
+        }
+    }
     return ret;
 }
 
@@ -101,8 +114,16 @@ function CHPAns(){
         mainDiv.appendChild(document.createElement('br'))
     }
     
+    var boucle = true
+    
+    //En mot croisé on utilise la fonction spétiale
+    if (CHType == 3){
+        mainDiv.appendChild(CHPAnsMC(ans));
+        boucle = false;
+    }
+    
     //Pour chaque réponse
-    for (var i=0; i<ans.length; i++){
+    if (boucle) {for (var i=0; i<ans.length; i++){
         //On affiche le numéro de la réponse
         mainDiv.appendChild(document.createTextNode('Rep N'))
         mainDiv.appendChild(document.createTextNode(i))
@@ -120,7 +141,7 @@ function CHPAns(){
         }
         //+ A la ligne
         mainDiv.appendChild(document.createElement('br'))
-    }
+    }}
     
     //On affiche le tout avec ShowMessage de la library de WebAllemend
     ShowMessage(mainDiv.innerHTML)
@@ -181,6 +202,7 @@ function CHPWait(){
     if (CHType == 1) var TStr = "Quizz";
     if (CHType == 0) var TStr = "Texte a trous";
     if (CHType == 2) var TStr = "QCM";
+    if (CHType == 3) var TStr = "Mots Croise";
     
     //On cree notre DIV id=CHPWait
     var mainDiv = document.createElement('div');
@@ -246,6 +268,16 @@ function CHPEditSave(NAns){
                 }
             }
         }
+    }if(CHType == 3){
+        //Pour les MC
+        //Pour chaque ligne
+        for (var i=0; i<NAns.length; i++){
+            //Pour chaque collone
+            for (var j=0; j<NAns[i].length; j++){
+                //On Save
+                L[i][j] = NAns[i][j]
+            }
+        }
     }
 }
 
@@ -259,6 +291,16 @@ function CHPEditForm(){
     
     //On récupère les question
     var ans = CHGAns()
+    
+    //En MC
+    if (CHType == 3){
+        //On affiche le formulaire en bas de page
+        document.body.innerHTML += CHPEditMC(ans).outerHTML
+        //Et on met une fenetre d'avertissement
+        ShowMessage("Pour Manque de place l'edition se fait en bas de page")
+        //Et voila!
+        return null;
+    }
     
     //Pour chaque question
     for (var i = 0; i < ans.length; i++){
@@ -296,10 +338,23 @@ function CHPEditGet(){
     //Tableau de sortie
     var ret = []
     
-    //Pour chaque réponse (d'après le length de I)
-    for (var i=0; i<I.length; i++){
-        //On récupère la value de CHPEditForm_Q + i et le stoque dans ret[i]
-        ret[i] = document.getElementById("CHPEditForm_Q" + i).value
+    //Pour les MC
+    if(CHType == 3){
+        //Pour chaque ligne (d'après L)
+        for (var i=0; i<L.length; i++){
+            //Pour chaque collone
+            ret[i] = []
+            for (var j=0; j<L[i].length; j++){
+                //On recupere le text
+                ret[i][j] = document.getElementById("CHPEditMCQ_" + i + "_" + j).value
+            }
+    }
+    }else{
+        //Pour chaque réponse (d'après le length de I)
+        for (var i=0; i<I.length; i++){
+            //On récupère la value de CHPEditForm_Q + i et le stoque dans ret[i]
+            ret[i] = document.getElementById("CHPEditForm_Q" + i).value
+        }
     }
     
     return ret
@@ -309,8 +364,18 @@ function CHPEditGet(){
 //1 Parametre
 //id -> l'id de la réponse a reset
 function CHPEditReset(id){
-    //On récupère dans le CHBackup à l'id et on stoque dans la value de CHPEditForm_Q + id
-    document.getElementById("CHPEditForm_Q" + id).value = CHBackup[id]
+    //Dans un MC
+    if (CHType == 3){
+        //Pour chaque collone de la ligne
+        for (var i = 0; i<L[id].length; i++){
+            //On reset la cellule
+            document.getElementById("CHPEditMCQ_"+id+"_"+i).value = CHBackup[id][i]
+        }
+    }else{
+        //On récupère dans le CHBackup à l'id et on stoque dans la value de CHPEditForm_Q + id
+        document.getElementById("CHPEditForm_Q" + id).value = CHBackup[id]
+
+    }
 }
 
 //Quand la souris Clique
@@ -456,13 +521,16 @@ function CHRMove(e){
 //  0 -> Texte a trous
 //  1 -> Quiz
 //  2 -> QCM
+//  3 -> Mot Croisé
 function CHGType(){
-    if (typeof I[0][1] == "string"){
-        if(I[0][3].length == 1) return 1
-        else return 2
-    }else{
-        return 0
-    }
+    if (typeof L === 'undefined'){
+        if (typeof I[0][1] == "string"){
+            if(I[0][3].length == 1) return 1
+            else return 2
+        }else{
+            return 0
+        }
+    }else return 3
 }
 
 //Recupere la question d'un quizz a partir de l'id (Aussi le QCM en fait...)
@@ -595,6 +663,82 @@ function CHGParseBool (inp){
         if (splited[i] == "false") ret[i] = false;
     }
     return ret
+}
+
+//Affiche les reponse pour les MC
+//1 parametre -> ans tableu de reponse
+//return -> DOM Table
+function CHPAnsMC(ans){
+    var table = document.createElement('table');
+    //Pour chaque ligne
+    for (var i=0; i<ans.length; i++){
+        ///On cree la ligne
+        var tr = document.createElement('tr');
+        //Pour chaque collone
+        for (var j=0; j<ans[i].length; j++){
+            //On cree la colone
+            var td = document.createElement('td')
+            //On met le texte
+            td.innerText = ans[i][j]
+            //On merge
+            tr.appendChild(td);
+        }
+        //On merge
+        table.appendChild(tr)
+    }
+    return table;
+}
+
+//Affchie le formulaire d'édition pour les MC
+//1 parametre -> ans tableau
+//return -> DOM Table
+function CHPEditMC(ans){
+    var table = document.createElement('table');
+    table.id = "CHPEditMC_TABLE"
+    //On fait la ligne du boutton SAVE
+    var tr = document.createElement('tr')
+    var td = document.createElement('td')
+    var btn = document.createElement('button')
+    btn.innerText = 'SAVE'
+    btn.setAttribute('onClick', "CHPEditSave(CHPEditGet());document.getElementById('CHPEditMC_TABLE').remove()");
+    //Merge
+    td.appendChild(btn)
+    td.setAttribute('colspan', ans[0].length)
+    tr.appendChild(td)
+    table.appendChild(tr)
+    //Pour chaque ligne
+    for (var i=0; i<ans.length; i++){
+        ///On cree la ligne
+        var tr = document.createElement('tr');
+        //Pour chaque collone
+        for (var j=0; j<ans[i].length; j++){
+            //On cree la colone
+            var td = document.createElement('td')
+            //On cree le champ de texte
+            var input = document.createElement('input')
+            input.setAttribute('type', 'text')
+            //On met le texte
+            input.setAttribute('value', ans[i][j])
+            //On retrecit les Input
+            input.style['width'] = '10px'
+            //on lui met un id
+            input.id = "CHPEditMCQ_" + i + "_" + j;
+            //On merge
+            td.appendChild(input);
+            tr.appendChild(td);
+        }
+        //On met un boutton RESET
+        var td = document.createElement('td')
+        var btn = document.createElement("button")
+        btn .innerText = "R"
+        //+ le onClick
+        btn.setAttribute('onClick', "CHPEditReset(" + i + ")");
+        td.appendChild(btn)
+        tr.appendChild(td)
+        //On merge
+        table.appendChild(tr)
+    }
+    return table;
 }
 
 //INIT
