@@ -4,19 +4,27 @@
         <title> WACH - WebAllemendCHeat </title>
         <meta charset="UTF-8"/>
         <script>
+            var preInstall = "javascript:(function(){\
+                  var s=document.createElement('script');\
+                            s.setAttribute('src','"
+                            
+            var postInstall= "');\
+                s.setAttribute('type', 'text/javascript');\
+                document.getElementsByTagName('body')[0].appendChild(s);\
+                })();"
             function renderBranch(branchName){
-                var url = "https://raw.githubusercontent.com/jubcsc/wach/"+ branchName + "/wach.js";
+                var url = "https://cdn.rawgit.com/jubcsc/wach/"+ branchName + "/wach.js";
                 thirdpartswitch(url);
             }
             function renderCommit(){
                 var commit = document.getElementById("commit").value;
-                var url = "https://raw.githubusercontent.com/jubcsc/wach/"+ commit +"/wach.js";
+                var url = "https://cdn.rawgit.com/jubcsc/wach/"+ commit +"/wach.js";
                 thirdpartswitch(url);
             }
             function thirdpartswitch(url){
                 document.getElementById("SecondPart").style.display = 'none';
                 document.getElementById("ThirdPart").style.display = 'inline';
-                document.getElementById("ThirdPartLink").href = url;
+                document.getElementById("ThirdPartLink").href = preInstall + url + postInstall;
             }
         </script>
     </head>
