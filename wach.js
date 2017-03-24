@@ -158,6 +158,39 @@ WACH.prototype.EditAwnser = function (id, ans, sid = 0) {
 
 };
 
+/*EditAllAwnsers: modifie toute les reponse
+	@settings(nans)=(array 1D :: string) reponse
+	@return=(void)
+*/
+WACH.prototype.EditAllAwnsers = function (NAns) {
+	//Pour les types TAT et Quizz
+	if(this.GetType() == TYPE_TAT || this.GetType() == TYPE_QUIZZ){
+		//On for et EditAwnser
+		for (var i = 0; i < NAns.length; i++)
+			this.EditAwnser(i) = NAns[i];
+	}
+	else if (this.GetType() == TYPE_QCM){
+		//QCM
+		//On for
+		for (var i = 0; i < NAns.length){
+			//On parse
+			var parsed = WACHUtil.stringListToBoolList(NAns[i]);
+			//Re for
+			for (var j = 0; j < parsed.length; j++)
+				this.EditAwnser(i, parsed[j], j)
+		}
+	}
+	else if (this.GetType() == TYPE_MC){
+		//MC
+		//DOuble for
+		for (var i = 0; i < NAns.length; i++){
+			for (var j = 0; j < NAns[i].length; j++)
+				this.EditAwnser(i, NAns[i][j], j);
+		}
+	}
+
+};
+
 /*GetAllAwnsers: retourne toute les reponse dans un tableau
 	@return=(array 1D :: string) reponse
 	OR
