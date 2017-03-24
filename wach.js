@@ -172,7 +172,7 @@ WACH.prototype.EditAllAwnsers = function (NAns) {
 	else if (this.GetType() == TYPE_QCM){
 		//QCM
 		//On for
-		for (var i = 0; i < NAns.length){
+		for (var i = 0; i < NAns.length; i++){
 			//On parse
 			var parsed = WACHUtil.stringListToBoolList(NAns[i]);
 			//Re for
