@@ -5,20 +5,22 @@
         <meta charset="UTF-8"/>
         <script>
             var preInstall = "javascript:(function(){\
-                  var s=document.createElement('script');\
-                            s.setAttribute('src','"
-                            
-            var postInstall= "');\
-                s.setAttribute('type', 'text/javascript');\
+                  					var xhr = new XMLHttpRequest();\
+                            xhr.open('GET', '"
+
+            var postInstall= "', false);\
+								xhr.send();\
+                var s = document.createElement('script');\
+								s.innerHTML = xhr.response;\
                 document.getElementsByTagName('body')[0].appendChild(s);\
                 })();"
             function renderBranch(branchName){
-                var url = "https://cdn.rawgit.com/jubcsc/wach/"+ branchName + "/wach.js";
+                var url = "https://raw.githubusercontent.com/jubcsc/wach/"+ branchName + "/wach.js";
                 thirdpartswitch(url);
             }
             function renderCommit(){
                 var commit = document.getElementById("commit").value;
-                var url = "https://cdn.rawgit.com/jubcsc/wach/"+ commit +"/wach.js";
+                var url = "https://raw.githubusercontent.com/jubcsc/wach/"+ commit +"/wach.js";
                 thirdpartswitch(url);
             }
             function thirdpartswitch(url){
@@ -34,7 +36,7 @@
             <h1>WACH - WebAllemendCHeat</h1>
             <h2>Installeur</h2>
             <a href="LICENSE">Liscence</a>
-        </p>    
+        </p>
         <div id="SecondPart">
             <p>
                 <h4>Mode Branche</h4>
@@ -42,7 +44,7 @@
                 <a href="#" onclick="renderBranch('beta')">beta</a><br/>
                 <a href="#" onclick="renderBranch('nightly')">nightly</a><br/>
             </p>
-            
+
             <p>
                 <h4>Mode commit</h4>
                 SHA: <input type="text" id="commit"/> <button onclick="renderCommit()">OK</button><br/>
@@ -55,7 +57,7 @@
                 <br/>
             </p>
         </div>
-        
+
         Oui c'est très moche...
     </body>
 </html>
