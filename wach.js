@@ -164,10 +164,10 @@ WACH.prototype.EditAwnser = function (id, ans, sid = 0) {
 */
 WACH.prototype.EditAllAwnsers = function (NAns) {
 	//Pour les types TAT et Quizz
-	if(this.GetType() == TYPE_TAT || this.GetType() == TYPE_QUIZZ){
+	if(this.GetType() == TYPE_TAT || this.GetType() == TYPE_QUIZ){
 		//On for et EditAwnser
 		for (var i = 0; i < NAns.length; i++)
-			this.EditAwnser(i) = NAns[i];
+			this.EditAwnser(i, NAns[i]);
 	}
 	else if (this.GetType() == TYPE_QCM){
 		//QCM
@@ -393,8 +393,10 @@ WACHUtilClass.prototype.stringListToBoolList = function (input) {
 	//Le for
 	for (var i = 0; i<splited.length; i++){
 		if(splited[i] == "true") ret[i] = true;
-		if(splited[i] == "false") ret[i] = true;
+		if(splited[i] == "false") ret[i] = false;
 	}
+
+	return ret;
 };
 
 //=====FIN CLASS=====
