@@ -30,6 +30,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+//=====Si il n'y a pas déjà WACH=====
+if (typeof WACHInstance === 'undefined'){
+
 //=====Init de départ=====
 var WACHInstance, WACHUtil = null;
 
@@ -536,3 +539,12 @@ WACHEvent.prototype.onKey = function (e) {
 //Instance de wach
 WACHUtil = new WACHUtilClass();
 WACHInstance = new WACH();
+console.log("WACH Inited!");
+
+}
+
+//====Sinon=====
+else{
+	alert("ERREUR: Double instance de WACH");
+	console.log("E:WACH DOUBLE Instance")
+}
