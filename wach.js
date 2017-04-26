@@ -509,6 +509,59 @@ WACHWindows.prototype.AwnserWindow = function () {
 		return mainDiv;
 };
 
+WACHWindows.prototype.EditWindow = function () {
+	//=====Ctrl + C / Ctrl + V d'en haut
+	var ans = WACHInstance.GetAllAwnsers();
+
+	var mainDiv = document.createElement('div');
+	mainDiv.id = 'WACHWindows.EditWindow';
+
+	if(WACHInstance.GetType() == TYPE_QCM){
+		mainDiv.appendChild(document.createTextNode('true -> vrai false -> faux'));
+		mainDiv.appendChild(document.createElement('br'));
+	}
+
+	var othermethod = function(){
+		//On for
+		for (var i = 0; i < ans.length; i++){
+			//Ancienne réponse
+			mainDiv.appendChild(document.createTextNode(ans[i] + "->"))
+
+			//Question pour les type a question
+			var question = WACHUtil.htmlEncode(WACHInstance.GetQuestion(i));
+			if(WACHInstance.GetType() == TYPE_QCM || WACHInstance.GetType() ==  TYPE_QUIZ)
+				mainDiv.innerHTML += '<button onClick="alert(\'' +  question + '\')">Q</button>';
+
+			//Champs de saise
+			var champs = document.createElement('input');
+			champs.setAttribute('type', 'text');
+			champs.setAttribute('value', ans[i]);
+			champs.setAttribute('id', 'WACHWindows.EditWindow.Q' + i)
+			mainDiv.appendChild(champs)
+
+			//Boutton de reset
+			var resetBtn = document.createElement('button');
+			resetBtn.setAttribute("onclick", "//");
+			resetBtn.appendChild(document.createTextNode("R"));
+			mainDiv.appendChild(resetBtn);
+
+			//Br
+			mainDiv.appendChild(document.createElement('br'));
+		}
+
+		//Boutton de save
+		var saveBtn = document.createElement('button');
+		saveBtn.setAttribute("onclick", "//");
+		saveBtn.appendChild(document.createTextNode("SAVE"));
+		mainDiv.appendChild(saveBtn);
+
+		//On affiche
+		ShowMessage(mainDiv.outerHTML);
+	}
+
+	othermethod();
+};
+
 //=====FIN CLASSE=====
 
 //====CLASSE EVENT=====
