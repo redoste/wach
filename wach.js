@@ -111,7 +111,8 @@ WACH.prototype.GetType = function(){
 WACH.prototype.GetAwnser = function (id, sid=0) {
 	if (this.gameType == TYPE_TAT) return I[id][1][0][0]
 	if (this.gameType == TYPE_QUIZ) return I[id][3][0][0]
-	if (this.gameType == TYPE_QCM) return WACHUtil.awnserParseBool(I[id][3][sid][1])
+	if (this.gameType == TYPE_QCM)
+	  return WACHUtil.awnserParseBool(I[id][3][sid][1])
 	if (this.gameType == TYPE_MC) return L[id][sid]
 };
 
@@ -124,6 +125,20 @@ WACH.prototype.GetQuestion = function (id) {
 	if(this.GetType() == TYPE_QUIZ || this.GetType() == TYPE_QCM)
 		return document.getElementById("Q_" + id).children[0].innerText
 	return "WACH::GetQuestion(Wrong Type Call)";
+};
+
+/*GetAwnserLabel: retourne le contenu de la réponse pour les QCM
+	@settings(id)=(int) Id de la question
+	@settings(sid)=(int) SId de la question
+	@return=(string)Contenu de la réponse
+*/
+WACH.prototype.GetAwnserLabel = function (id, sid) {
+	//return I[id][3][sid][0];
+	//On prefere la methode a recuperer dans l'HTML pour si l'utilisateur a modifier
+	//le libélé via TextEdit
+
+	//On prend l'élément suivant le boutton pour ne pas avoir le ? du boutton
+	return document.getElementById("Q_" + id + "_" + sid + "_Btn").nextSibling.textContent
 };
 
 /*EditAwnser: modifie une reponse
@@ -381,7 +396,8 @@ WACHUtilClass.prototype.htmlEncode = function (txt) {
 	return s;
 };
 
-/*stringListToBoolList: transforme une string -> "true,false,true" en tableau [true, false, true]
+/*stringListToBoolList: transforme une string -> "true,false,true"
+  en tableau [true, false, true]
 	@settings(input)=(bool) entrée
 	@return=(string) sorite
 */
@@ -468,7 +484,10 @@ WACHWindows.prototype.AwnserWindow = function () {
 				if(WACHInstance.GetType() == TYPE_QCM){
 					//Plusieure reponse
 					for (var j = 0; j< ans[i].length ; j++)
-						mainDiv.appendChild(document.createTextNode(ans[i][j] + " "));
+						mainDiv.appendChild(
+							document.createTextNode(WACHInstance.GetAwnserLabel(i,j) + ": "
+							 + ans[i][j] + " | ")
+						 );
 				}
 				//Autre type "clasique"
 				else
