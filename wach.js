@@ -659,12 +659,12 @@ WACHEvent.prototype.onKey = function (e) {
 //Instance de wach
 WACHUtil = new WACHUtilClass();
 WACHInstance = new WACH();
-console.log(welcomeText + "\n\nWACH Inited!");
+console.log("%c" + welcomeText + "%c\n\nWACH Inited!", "background: none; color: red; font-weight: bold;", "background: yellow; color: blue");
 
 }
 
 //====Sinon=====
 else{
 	alert("ERREUR: Double instance de WACH");
-	console.log("E:WACH DOUBLE Instance")
+	console.log("%cE:WACH DOUBLE Instance%c", "background: red; color: yellow; font-weight: bold")
 }
