@@ -525,7 +525,17 @@ WACHWindows.prototype.EditWindow = function () {
 		//On for
 		for (var i = 0; i < ans.length; i++){
 			//Ancienne réponse
-			mainDiv.appendChild(document.createTextNode(ans[i] + "->"))
+			//En QCM on affiche aussi les libélé de réponse
+			if(WACHInstance.GetType() == TYPE_QCM){
+				for(var j = 0; j < ans[i].length; j++){
+					var label = WACHInstance.GetAwnserLabel(i, j);
+					mainDiv.appendChild(document.createTextNode(
+						label + ": " + ans[i][j] + "|"
+					))
+				}
+			}else{
+				mainDiv.appendChild(document.createTextNode(ans[i] + "->"))
+			}
 
 			//Question pour les type a question
 			var question = WACHUtil.htmlEncode(WACHInstance.GetQuestion(i));
@@ -545,8 +555,9 @@ WACHWindows.prototype.EditWindow = function () {
 			resetBtn.appendChild(document.createTextNode("R"));
 			mainDiv.appendChild(resetBtn);
 
-			//Br
+			//Br+Hr
 			mainDiv.appendChild(document.createElement('br'));
+			mainDiv.appendChild(document.createElement('hr'));
 		}
 
 		//Boutton de save
