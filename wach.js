@@ -570,7 +570,60 @@ WACHWindows.prototype.EditWindow = function () {
 		ShowMessage(mainDiv.outerHTML);
 	}
 
-	othermethod();
+	var mcmethod = function(){
+		//Table de base + btn save
+		var table = document.createElement('table')
+		table.id = "WACHWindows.EditWindow.mcmethod"
+
+		var savetr = document.createElement('tr');
+		var savetd = document.createElement('td');
+		var savebtn = document.createElement('button');
+		savebtn.innerText = 'SAVE';
+		savebtn.setAttribute('onclick', '//');
+
+		savetd.appendChild(savebtn);
+		savetd.setAttribute('colspan', ans[0].length)
+
+		savetr.appendChild(savetd);
+		table.appendChild(savetr);
+
+		//On double for
+		for(var i = 0; i < ans.length; i++){
+			var tr = document.createElement('tr');
+			for(var j = 0; j < ans[i].length; j++){
+				var td = document.createElement('td');
+
+				//Champs de Texte
+				var input = document.createElement('input')
+				input.setAttribute('type', 'text');
+				input.setAttribute('value', ans[i][j]);
+				input.style.width = '10px';
+				input.id = 'WACHWindows.EditWindow.mcmethod.Q' + i + "_" + j;
+
+				td.appendChild(input);
+				tr.appendChild(td);
+			}
+			//Btn de reset
+			var resetTd = document.createElement('td');
+			var resetBtn = document.createElement('button');
+			resetBtn.innerText = "R";
+			resetBtn.setAttribute('onclick', '//');
+			resetTd.appendChild(resetBtn);
+			tr.appendChild(resetTd);
+
+			table.appendChild(tr);
+		}
+
+		document.body.appendChild(table);
+
+		mainDiv.appendChild(document.createTextNode
+			("Pour manque de place, l'édition se fait en bas de page.")
+		);
+		ShowMessage(mainDiv.outerHTML);
+	}
+
+	if(WACHInstance.GetType() == TYPE_MC)	mcmethod();
+	else 																	othermethod();
 };
 
 //=====FIN CLASSE=====
