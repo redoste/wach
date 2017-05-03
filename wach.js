@@ -661,6 +661,11 @@ WACHEvent.prototype.onKey = function (e) {
 		WACHInstance.status.SetStatus(STATUS_N);
 		WACHInstance.windows.AwnserWindow();
 	}
+	//Le E en wait
+	if(e.keyCode == 69 && WACHInstance.status.GetStatus() == STATUS_WAIT){
+		WACHInstance.status.SetStatus(STATUS_N);
+		WACHInstance.windows.EditWindow();
+	}
 };
 
 /*onClickReset: reset l'entrée dans la fenetre d'édition
