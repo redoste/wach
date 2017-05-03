@@ -617,7 +617,7 @@ WACHWindows.prototype.EditWindow = function () {
 			var resetTd = document.createElement('td');
 			var resetBtn = document.createElement('button');
 			resetBtn.innerText = "R";
-			resetBtn.setAttribute('onclick', '//');
+			resetBtn.setAttribute('onclick', 'WACHInstance.event.onClickReset(' + i + ')');
 			resetTd.appendChild(resetBtn);
 			tr.appendChild(resetTd);
 
@@ -668,7 +668,12 @@ WACHEvent.prototype.onKey = function (e) {
 WACHEvent.prototype.onClickReset = function (id) {
 	//Pour un MC
 	if(WACHInstance.GetType() == TYPE_MC){
-
+		//Pour chaque colonne de la ligne
+		for (var i = 0; i < L[id].length; i++){
+			document.getElementById
+			  ("WACHWindows.EditWindow.mcmethod.Q" + id + "_" + i).value =
+				L[id][i];
+		}
 	}
 	//Pour le reste
 	else{
