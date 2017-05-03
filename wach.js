@@ -570,7 +570,7 @@ WACHWindows.prototype.EditWindow = function () {
 
 		//Boutton de save
 		var saveBtn = document.createElement('button');
-		saveBtn.setAttribute("onclick", "//");
+		saveBtn.setAttribute("onclick", "WACHInstance.event.onClickSave();HideFeedback();");
 		saveBtn.appendChild(document.createTextNode("SAVE"));
 		mainDiv.appendChild(saveBtn);
 
@@ -589,7 +589,9 @@ WACHWindows.prototype.EditWindow = function () {
 		var savetd = document.createElement('td');
 		var savebtn = document.createElement('button');
 		savebtn.innerText = 'SAVE';
-		savebtn.setAttribute('onclick', '//');
+		savebtn.setAttribute('onclick',
+		  "WACHInstance.event.onClickSave();\
+			document.getElementById('WACHWindows.EditWindow.mcmethod').remove()");
 
 		savetd.appendChild(savebtn);
 		savetd.setAttribute('colspan', ans[0].length)
@@ -672,7 +674,7 @@ WACHEvent.prototype.onClickReset = function (id) {
 		for (var i = 0; i < L[id].length; i++){
 			document.getElementById
 			  ("WACHWindows.EditWindow.mcmethod.Q" + id + "_" + i).value =
-				L[id][i];
+				WACHInstance.backup[id][i];
 		}
 	}
 	//Pour le reste
