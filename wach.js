@@ -682,6 +682,32 @@ WACHEvent.prototype.onClickReset = function (id) {
 	}
 };
 
+/*onClickSave: save l'entrée de la fenetre d'édition
+	@return(array 1D :: string) = réponses
+*/
+WACHEvent.prototype.onClickSave = function () {
+	var ret = [];
+
+	//Pour les MC
+	if(WACHInstance.GetType() == TYPE_MC){
+		//On double for d'apres L
+		for (var i = 0; i < L.length; i++){
+			ret[i] = [];
+			for (var j = 0; j < L[i].length; j++){
+				ret[i][j] = document.getElementById
+				("WACHWindows.EditWindow.mcmethod.Q" + i + "_" + j).value;
+			}
+		}
+	}//Les autre
+	else{
+		//Pour chaque réponse d'après le length de I
+		for (var i = 0; i<I.length; i++)
+			ret[i] = document.getElementById("WACHWindows.EditWindow.Q" + i).value;
+	}
+
+	WACHInstance.EditAllAwnsers(ret);
+	return ret;
+};
 //====FIN CLASSE=====
 
 //Instance de wach
