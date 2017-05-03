@@ -559,7 +559,7 @@ WACHWindows.prototype.EditWindow = function () {
 
 			//Boutton de reset
 			var resetBtn = document.createElement('button');
-			resetBtn.setAttribute("onclick", "//");
+			resetBtn.setAttribute("onclick", "WACHInstance.event.onClickReset(" + i + ")");
 			resetBtn.appendChild(document.createTextNode("R"));
 			mainDiv.appendChild(resetBtn);
 
