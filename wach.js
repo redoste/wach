@@ -13,7 +13,7 @@ WACH WebAllemendCHeat: a cheat tool for WebAllemend
   -> http://steph.raymond.free.fr/              WebAllemend
   -> https://www.gnu.org/licenses/gpl-3.0.txt   Liscence
 
-Copyright (C) 2017 reDOSte
+Copyright © 2017 reDOSte
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
