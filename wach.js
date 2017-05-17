@@ -702,6 +702,7 @@ WACHWindows.prototype.TextEditWindow = function(target) {
 function WACHEvent(){
 	//Definition des event
 	document.onkeydown = this.onKey;
+	document.onclick = this.onClick;
 }
 
 /* onKey: Appelé lors de l'appui d'une touche
@@ -773,6 +774,17 @@ WACHEvent.prototype.onClickSave = function () {
 
 	WACHInstance.EditAllAwnsers(ret);
 	return ret;
+};
+
+/*onClick: lors du clique sur le document
+	@settings(e) = (object::event) Objet Event du browser
+*/
+WACHEvent.prototype.onClick = function(e){
+	//En TE
+	if(WACHInstance.status.GetStatus() == STATUS_TE_WAIT){
+		WACHInstance.windows.TextEditWindow(e.target);
+		WACHInstance.status.SetStatus(STATUS_N);
+	}
 };
 //====FIN CLASSE=====
 
