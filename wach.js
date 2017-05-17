@@ -660,6 +660,39 @@ WACHWindows.prototype.EditWindow = function () {
 	else 																	othermethod();
 };
 
+/*TextEditWindow : Fenetre d'édition du texte
+	@settings(target) = (object::dom) Target of the text edit
+	@return = (object::dom) Return Div
+*/
+WACHWindows.prototype.TextEditWindow = function(target) {
+	var div = document.createElement('div');
+	div.id = "WACHWindows.TextEditWindow";
+
+	//Pour chaque enfant
+	for(var i = 0; i < target.childNodes.length; i++){
+		if(target.childNodes[i].nodeName == "#text"){
+			//Ajout du input
+			var input = document.createElement('input');
+			input.setAttribute('type', 'text');
+			input.setAttribute('value', target.childNodes[i].textContent);
+			input.setAttribute('id', "WACHWindows.TextEditWindow.I" + i);
+
+			div.appendChild(input);
+			div.appendChild(document.createElement('br'));
+		}
+	}
+
+	//SAVE
+	var saveBtn = document.createElement('button');
+	saveBtn.innerText = "SAVE";
+	saveBtn.setAttribute('onclick', '//');
+
+	div.appendChild(saveBtn);
+
+	ShowMessage(div.outerHTML);
+	return div;
+};
+
 //=====FIN CLASSE=====
 
 //====CLASSE EVENT=====
@@ -672,7 +705,7 @@ function WACHEvent(){
 }
 
 /* onKey: Appelé lors de l'appui d'une touche
-	settings(e) = (object::event) Evenement detecté par le naviagteur
+	@settings(e) = (object::event) Evenement detecté par le naviagteur
 */
 WACHEvent.prototype.onKey = function (e) {
 	//Le œ en classique
