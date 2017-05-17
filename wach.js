@@ -291,6 +291,8 @@ function WACHStatus(newGameType){
 		this.gameType = newGameType;
 		//Definis le WAIT block
 		this.waitBlock = null;
+		// + Wait block de TE
+		this.waitBlockTE = null;
 		//Et initialize le status texte
 		this.CreateBlock();
 }
@@ -336,6 +338,17 @@ WACHStatus.prototype.CreateBlock = function () {
 	//On ecrit dans this.waitBlock
 	this.waitBlock = document.getElementById('wach_status.CreateBlock');
 
+
+	//Wait block Text Edit
+	this.waitBlockTE = (function(){
+		block = document.createElement('div');
+		block.id = 'wach_status.CreateBlock.TE';
+		block.style.display = 'none';
+		block.appendChild(document.createTextNode("Attends Text Edit"));
+		document.body.appendChild(block);
+		return block;
+	})();
+
 };
 
 /*SetStatus: definis le SetStatus
@@ -347,6 +360,7 @@ WACHStatus.prototype.SetStatus = function (status) {
 	if(status == STATUS_N){
 		//On masque le block
 		this.waitBlock.style.display = 'none';
+		this.waitBlockTE.style.display = 'none';
 		//On save
 		this.status = status;
 	}
@@ -354,8 +368,16 @@ WACHStatus.prototype.SetStatus = function (status) {
 	//Mode wait
 	if (status == STATUS_WAIT){
 		//On affiche le block
-		this.waitBlock.style.display = 'inline';
+		this.waitBlock.style.display = 'block';
+		this.waitBlockTE.style.display = 'none';
 		//On Save
+		this.status = status;
+	}
+
+	//Mode Wait_TAT
+	if(status == STATUS_TE_WAIT){
+		this.waitBlockTE.style.display = 'block';
+		this.waitBlock.style.display = 'none';
 		this.status = status;
 	}
 };
