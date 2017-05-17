@@ -688,6 +688,10 @@ WACHEvent.prototype.onKey = function (e) {
 		WACHInstance.status.SetStatus(STATUS_N);
 		WACHInstance.windows.EditWindow();
 	}
+	//Le T en wait
+	if(e.keyCode == 84 && WACHInstance.status.GetStatus() == STATUS_WAIT){
+		WACHInstance.status.SetStatus(STATUS_TE_WAIT);
+	}
 };
 
 /*onClickReset: reset l'entrée dans la fenetre d'édition
