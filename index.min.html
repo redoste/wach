@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+<title> WACH - WebAllemendCHeat </title>
+<meta charset="UTF-8"/>
+<script>function renderBranch(t){thirdpartswitch("https://raw.githubusercontent.com/jubcsc/wach/"+t+"/wach.js","WACH BRANCH "+t)}function renderCommit(){var t=document.getElementById("commit").value;thirdpartswitch("https://raw.githubusercontent.com/jubcsc/wach/"+t+"/wach.js","WACH COMMIT: "+t)}function thirdpartswitch(t,e){document.getElementById("SecondPart").style.display="none",document.getElementById("ThirdPart").style.display="inline",document.getElementById("ThirdPartLink").href=preInstall+t+postInstall,document.getElementById("ThirdPartLink").innerText=e}var preInstall="javascript:(function(){var xhr = new XMLHttpRequest();xhr.open('GET', '",postInstall="', false);xhr.send();var s = document.createElement('script');s.innerHTML = xhr.response;document.getElementsByTagName('body')[0].appendChild(s);})();";</script>
+<style>a{color:#f00}a:visited{color:#800000}body{text-align:center}h1{font-size:75px}h2{font-size:40px}h4{font-size:25px}a{font-size:20px}</style>
+</head>
+<body>
+<a href=https://github.com/jubcsc/wach><img style=position:absolute;top:0;right:0;border:0 src=https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67 alt="Fork me on GitHub" data-canonical-src=https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png></a>
+<p>
+<h1>WACH - WebAllemendCHeat</h1>
+<h2>Installeur</h2>
+<a href=https://github.com/jubcsc/wach/blob/master/LICENSE>Licence</a>
+</p>
+<div id=SecondPart>
+<p>
+<h4>Mode branche</h4>
+<a href=# onclick="renderBranch('master')">master</a><br/>
+</p>
+<p>
+<h4>Mode commit</h4>
+SHA:<input type=text id="commit"/> <button onclick=renderCommit()>✔</button><br/>
+</p>
+</div>
+<div id=ThirdPart style=display:none>
+<p>
+<a href=# id=ThirdPartLink>ADD</a><br/>
+<a href=# onclick=document.location.reload(true)>Refresh</a><br/>
+<br/>
+</p>
+</div>
+<a href=https://github.com/jubcsc/wach/wiki/Installation>Tutoriel installation</a>
+</body>
+</html>
