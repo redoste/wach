@@ -474,6 +474,14 @@ WACHUtilClass.prototype.stringListToBoolList = function (input) {
 	return ret;
 };
 
+/*searchImage: recherche une image sur qwant
+	@settings(querry)=(strings) requette
+	@return(void)
+*/
+WACHUtilClass.prototype.searchImage = function (querry) {
+	window.open("https://www.qwant.com/?q="+ encodeURIComponent(querry) +"&t=images");
+};
+
 //=====FIN CLASS=====
 
 //=====CLASSE WACH WINDOWS=====
