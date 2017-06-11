@@ -298,8 +298,9 @@ function WACHStatus(newGameType){
 		this.gameType = newGameType;
 		//Definis le WAIT block
 		this.waitBlock = null;
-		// + Wait block de TE
+		// + Wait block de TE et IE
 		this.waitBlockTE = null;
+		this.waitBlockIE = null;
 		//Et initialize le status texte
 		this.CreateBlock();
 }
@@ -356,6 +357,16 @@ WACHStatus.prototype.CreateBlock = function () {
 		return block;
 	})();
 
+	//Wait block Image Edit
+	this.waitBlockIE = (function(){
+		var block = document.createElement('div');
+		block.id = "wach_status.CreateBlock.IE";
+		block.style.display = 'none';
+		block.appendChild(document.createTextNode("Attends Image Edit"));
+		document.body.appendChild(block)
+		return block;
+	})();
+
 };
 
 /*SetStatus: definis le SetStatus
@@ -368,6 +379,7 @@ WACHStatus.prototype.SetStatus = function (status) {
 		//On masque le block
 		this.waitBlock.style.display = 'none';
 		this.waitBlockTE.style.display = 'none';
+		this.waitBlockIE.style.display = 'none';
 		//On save
 		this.status = status;
 	}
@@ -377,14 +389,24 @@ WACHStatus.prototype.SetStatus = function (status) {
 		//On affiche le block
 		this.waitBlock.style.display = 'block';
 		this.waitBlockTE.style.display = 'none';
+		this.waitBlockIE.style.display = 'none';
 		//On Save
 		this.status = status;
 	}
 
-	//Mode Wait_TAT
+	//Mode Wait_TE
 	if(status == STATUS_TE_WAIT){
 		this.waitBlockTE.style.display = 'block';
 		this.waitBlock.style.display = 'none';
+		this.waitBlockIE.style.display = 'none';
+		this.status = status;
+	}
+
+	//Mode Wait_IE
+	if(status == STATUS_IE_WAIT){
+		this.waitBlockIE.style.display = 'block';
+		this.waitBlock.style.display = 'none';
+		this.waitBlockTE.style.display = 'none';
 		this.status = status;
 	}
 };
