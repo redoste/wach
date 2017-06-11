@@ -885,6 +885,11 @@ WACHEvent.prototype.onClick = function(e){
 		WACHInstance.windows.TextEditWindow(e.target);
 		WACHInstance.status.SetStatus(STATUS_N);
 	}
+	//En IE
+	if(WACHInstance.status.GetStatus() == STATUS_IE_WAIT){
+		WACHInstance.windows.ImageEditWindow(e.target);
+		WACHInstance.status.SetStatus(STATUS_N);
+	}
 };
 
 /*onClickSaveTE: lors du click du save de TextEditWindow
