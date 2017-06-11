@@ -87,6 +87,8 @@ function WACH(){
 		//Savecontainer du TE
 		this.TEContainer = {
 			target: null,
+			pointAcc: document.body,
+			pointAccColor: document.body.style["background-color"],
 		}
 }
 
@@ -715,6 +717,7 @@ function WACHEvent(){
 	//Definition des event
 	document.onkeydown = this.onKey;
 	document.onclick = this.onClick;
+	document.onmousemove = this.onMove;
 }
 
 /* onKey: Appelé lors de l'appui d'une touche
@@ -820,6 +823,25 @@ WACHEvent.prototype.onClickSaveTE = function () {
 	}
 
 };
+
+/*onMove: lors du mouvement de la souris
+	@settings(e) = (object::event) Object event du browser
+	@return(void)
+*/
+
+WACHEvent.prototype.onMove = function(e){
+	if(WACHInstance.status.GetStatus() == STATUS_TE_WAIT){
+		WACHInstance.TEContainer.pointAcc.style["background-color"] = WACHInstance.TEContainer.pointAccColor;
+		WACHInstance.TEContainer.pointAcc = e.target;
+		WACHInstance.TEContainer.pointAccColor = e.target.style["background-color"];
+		e.target.style["background-color"] = "grey";
+	}
+	else if (WACHInstance.status.GetStatus() != STATUS_TE_WAIT && WACHInstance.TEContainer.pointAcc != document.body) {
+		WACHInstance.TEContainer.pointAcc.style["background-color"] = WACHInstance.TEContainer.pointAccColor;
+		WACHInstance.TEContainer.pointAcc = document.body;
+		WACHInstance.TEContainer.pointAccColor = document.body.style["background-color"];
+	}
+}
 
 //====FIN CLASSE=====
 
