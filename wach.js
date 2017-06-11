@@ -763,6 +763,10 @@ WACHEvent.prototype.onKey = function (e) {
 	if(e.keyCode == 84 && WACHInstance.status.GetStatus() == STATUS_WAIT){
 		WACHInstance.status.SetStatus(STATUS_TE_WAIT);
 	}
+	//Le I en wait
+	if(e.keyCode == 73 && WACHInstance.status.GetStatus() == STATUS_WAIT){
+		WACHInstance.status.SetStatus(STATUS_IE_WAIT);
+	}
 };
 
 /*onClickReset: reset l'entrée dans la fenetre d'édition
