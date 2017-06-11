@@ -737,6 +737,55 @@ WACHWindows.prototype.TextEditWindow = function(target) {
 	return div;
 };
 
+/*ImageEditWindow: Fenetre d'édition d'Image
+  @settings(target) = (object::dom) Target of the text edit
+	@return = (object::dom) Return Div
+*/
+WACHWindows.prototype.ImageEditWindow = function (target) {
+	var div = document.createElement('div');
+	div.id = "WACHWindows.ImageEditWindow";
+
+	//Zone de l'url
+	div.appendChild(document.createTextNode('URL: '));
+	var urlZone = document.createElement('input');
+	urlZone.setAttribute('type', 'text');
+	urlZone.setAttribute('id', 'WACHWindows.ImageEditWindow.url');
+	urlZone.setAttribute('value', target.src);
+	div.appendChild(urlZone);
+
+	//Boutton de save
+	var saveBtn = document.createElement('button');
+	saveBtn.setAttribute("onclick", "//")
+	saveBtn.innerText = "SAVE";
+	div.appendChild(saveBtn);
+
+	div.appendChild(document.createElement('br'));
+
+	//Zone de recherche
+	div.appendChild(document.createTextNode('QWANT: '));
+	var searchZone = document.createElement('input');
+	searchZone.setAttribute('type', 'text');
+	searchZone.setAttribute('id', 'WACHWindows.ImageEditWindow.search');
+	searchZone.setAttribute('value', '');
+	div.appendChild(searchZone);
+
+	//Boutton de recherche
+	var searchBtn = document.createElement('button');
+	searchBtn.setAttribute("onclick",
+	 "WACHUtil.searchImage(\
+		 document.getElementById('WACHWindows.ImageEditWindow.search').value\
+	 )"
+  );
+	searchBtn.innerText = "SEARCH";
+	div.appendChild(searchBtn);
+
+	div.appendChild(document.createElement('br'));
+
+	ShowMessage(div.outerHTML);
+	return div;
+
+};
+
 //=====FIN CLASSE=====
 
 //====CLASSE EVENT=====
