@@ -781,6 +781,13 @@ WACHWindows.prototype.ImageEditWindow = function (target) {
 
 	div.appendChild(document.createElement('br'));
 
+	div.appendChild(document.createTextNode("\
+		Pour utiliser Qwant: \
+		Faites une recherche puis selectionnez l'image, une fois l'image affichée en grand\
+	  click droit sur plein écran puis copier l'addresse du lien\
+		collez la dans le champs url et sauvegardez.\
+	"))
+
 	ShowMessage(div.outerHTML);
 	return div;
 
