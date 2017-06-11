@@ -83,6 +83,11 @@ function WACH(){
 		this.windows = new WACHWindows();
 		//Backup des reponses
 		this.backup = null;
+
+		//Savecontainer du TE
+		this.TEContainer = {
+			target: null,
+		}
 }
 
 //Methode
@@ -668,6 +673,9 @@ WACHWindows.prototype.TextEditWindow = function(target) {
 	var div = document.createElement('div');
 	div.id = "WACHWindows.TextEditWindow";
 
+	//Final TE value
+	var j = 0;
+
 	//Pour chaque enfant
 	for(var i = 0; i < target.childNodes.length; i++){
 		if(target.childNodes[i].nodeName == "#text"){
@@ -675,17 +683,21 @@ WACHWindows.prototype.TextEditWindow = function(target) {
 			var input = document.createElement('input');
 			input.setAttribute('type', 'text');
 			input.setAttribute('value', target.childNodes[i].textContent);
-			input.setAttribute('id', "WACHWindows.TextEditWindow.I" + i);
+			input.setAttribute('id', "WACHWindows.TextEditWindow.I" + j);
+
+			j++;
 
 			div.appendChild(input);
 			div.appendChild(document.createElement('br'));
 		}
 	}
 
+	div.setAttribute("valueNum", j);
+
 	//SAVE
 	var saveBtn = document.createElement('button');
 	saveBtn.innerText = "SAVE";
-	saveBtn.setAttribute('onclick', '//');
+	saveBtn.setAttribute('onclick', 'WACHInstance.event.onClickSaveTE();HideFeedback();');
 
 	div.appendChild(saveBtn);
 
@@ -778,14 +790,37 @@ WACHEvent.prototype.onClickSave = function () {
 
 /*onClick: lors du clique sur le document
 	@settings(e) = (object::event) Objet Event du browser
+	@return(void)
 */
 WACHEvent.prototype.onClick = function(e){
 	//En TE
 	if(WACHInstance.status.GetStatus() == STATUS_TE_WAIT){
+		WACHInstance.TEContainer.target = e.target;
 		WACHInstance.windows.TextEditWindow(e.target);
 		WACHInstance.status.SetStatus(STATUS_N);
 	}
 };
+
+/*onClickSaveTE: lors du click du save de TextEditWindow
+	@retrun(void)
+*/
+WACHEvent.prototype.onClickSaveTE = function () {
+	var div=document.getElementById("WACHWindows.TextEditWindow");
+	var target = WACHInstance.TEContainer.target;
+	var targets = [];
+	for (var i = 0; i < target.childNodes.length; i++){
+		if(target.childNodes[i].nodeName == "#text")
+			targets.push(target.childNodes[i]);
+	}
+
+	//Get all value in TE windows
+	for(var i = 0; i < div.getAttribute("valueNum"); i++){
+		var value = document.getElementById("WACHWindows.TextEditWindow.I" + i).value;
+		targets[i].textContent = value;
+	}
+
+};
+
 //====FIN CLASSE=====
 
 //Instance de wach
