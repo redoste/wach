@@ -84,11 +84,14 @@ function WACH(){
 		//Backup des reponses
 		this.backup = null;
 
-		//Savecontainer du TE
+		//Savecontainer du TE et IE
 		this.TEContainer = {
 			target: null,
 			pointAcc: document.body,
 			pointAccColor: document.body.style["background-color"],
+		}
+		this.IEContainer = {
+			target: null,
 		}
 }
 
@@ -755,7 +758,7 @@ WACHWindows.prototype.ImageEditWindow = function (target) {
 
 	//Boutton de save
 	var saveBtn = document.createElement('button');
-	saveBtn.setAttribute("onclick", "//")
+	saveBtn.setAttribute("onclick", "WACHInstance.event.onClickSaveIE();HideFeedback();")
 	saveBtn.innerText = "SAVE";
 	div.appendChild(saveBtn);
 
@@ -894,6 +897,7 @@ WACHEvent.prototype.onClick = function(e){
 	}
 	//En IE
 	if(WACHInstance.status.GetStatus() == STATUS_IE_WAIT){
+		WACHInstance.IEContainer.target = e.target;
 		WACHInstance.windows.ImageEditWindow(e.target);
 		WACHInstance.status.SetStatus(STATUS_N);
 	}
@@ -917,6 +921,14 @@ WACHEvent.prototype.onClickSaveTE = function () {
 		targets[i].textContent = value;
 	}
 
+};
+
+/*onClickSaveIE: lors du click du save de ImageEditWindow
+ @return(void)
+*/
+WACHEvent.prototype.onClickSaveIE = function () {
+	WACHInstance.IEContainer.target.src =
+	 document.getElementById("WACHWindows.ImageEditWindow.url").value;
 };
 
 /*onMove: lors du mouvement de la souris
