@@ -1,745 +1,981 @@
-//Deffinition des variable globale
-var CHStatus = null;
-var CHBackup = null;
-var CHTESource = null;
-var CHTEPointAcc = null;
-var CHTEPointOld = null;
-var CHTEPointOldColor = null;
-var CHIESource = null;
-var CHType = null;
+/*============================================================================
+           _____   ____   _____ _
+          |  __ \ / __ \ / ____| |
+  _ __ ___| |  | | |  | | (___ | |_ ___
+ | '__/ _ \ |  | | |  | |\___ \| __/ _ \
+ | | |  __/ |__| | |__| |____) | ||  __/
+ |_|  \___|_____/ \____/|_____/ \__\___|
 
-//La version
-const CHVER = "WACH_BETA_0.7";
+===============================================================================
+WACH WebAllemendCHeat: a cheat tool for WebAllemend
+  -> http://redoste.fr.nf                       WEBSITE
+  -> http://redoste.byethost7.com/0ch/wa        Offcial Program page
+  -> http://steph.raymond.free.fr/              WebAllemend
+  -> https://www.gnu.org/licenses/gpl-3.0.txt   Liscence
 
-//Fonction d'initialisation
-//0 Parametre
-//Pas de return
-function CHInit(){
-    CHStatus = 0;
-    //Definis le satatus de WACH
-    //0 -> Classique
-    //1 -> En atente de œ
-    //2 -> En atente de TextEdit
-    //3 -> En atente de Image Edit
-    
-    CHType = CHGType()
-    //Definis le type de jeu
-    
-    CHTEPointOld = document.body
-    CHTEPointOldColor = document.body.style['background-color']
-    //Definis les variable globale de l'aide au pointage de text edit
-    
-    CHPWait()
-    //Cree le bloc d'attete en bas de page
-    
-    CHBackup = CHGAns()
-    //Sauvegarde les reponse
-    
-    document.onkeydown = CHRKey
-    document.onclick   = CHRClick
-    document.onmousemove = CHRMove
-    //Definis l'écoute des touche du document vers CHRKey
-    //Definis l'écoute des clicks du document vers CHRClick
-    //Definis l'écoute de déplacement du document ver CHRMove
+Copyright © 2017 reDOSte
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
+
+//=====Si il n'y a pas déjà WACH=====
+if (typeof WACHInstance === 'undefined'){
+
+//=====Init de départ=====
+var WACHInstance = null, WACHUtil = null;
+
+//=====CONSTANCE=====
+
+//Welcome Texte
+const welcomeText=decodeURIComponent("%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A%20%20%20%20%20%20%20%20%20%20%20_____%20%20%20____%20%20%20_____%20_%0A%20%20%20%20%20%20%20%20%20%20%7C%20%20__%20%5C%20%2F%20__%20%5C%20%2F%20____%7C%20%7C%0A%20%20_%20__%20___%7C%20%7C%20%20%7C%20%7C%20%7C%20%20%7C%20%7C%20(___%20%7C%20%7C_%20___%0A%20%7C%20%27__%2F%20_%20%5C%20%7C%20%20%7C%20%7C%20%7C%20%20%7C%20%7C%5C___%20%5C%7C%20__%2F%20_%20%5C%0A%20%7C%20%7C%20%7C%20%20__%2F%20%7C__%7C%20%7C%20%7C__%7C%20%7C____)%20%7C%20%7C%7C%20%20__%2F%0A%20%7C_%7C%20%20%5C___%7C_____%2F%20%5C____%2F%7C_____%2F%20%5C__%5C___%7C%0A%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D\
+%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0AWACH%20WebAllemendCHeat%3A%20a%20cheat%20tool%20for%20WebAllemend%0A%20%20-%3E%20http%3A%2F%2Fredoste.fr.nf%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20WEBSITE%0A%20%20-%3E%20http%3A%2F%2Fredoste.byethost7.com%2F0ch%2Fwa%20%20%20%20%20%20%20%20Offcial%20Program%20page%0A%20%20-%3E%20http%3A%2F%2Fsteph.raymond.free.fr%2F%20%20%20%20%20%20%20%20%20%20%20%20%20%20WebAllemend%0A%20%20-%3E%20https%3A%2F%2Fwww.gnu.org%2Flicenses%2Fgpl-3.0.txt%20%20%20Liscence%0A%0ACopyright%20(C)%202017%20reDOSte%0A%0AThis%20program%20is%20free%20software%3B%20you%20can%20redistribute%20it%20and%2For%0Amodify%20it%20under%20the%20terms%20of%20the%20GNU%20General%20Public%20License%0Aas%20published%20by%20the%20Free%20Software%20Foundation%3B%20either%20version%202%0Aof%20the%20License%2C%20or%20(at%20your%20option)%20any%20later%20version.%0A%0AThis%20program%20is%20distributed%20in%20the%20hope%20that%20it%20will%20be%20useful%2C%0Ab\
+t%20WITHOUT%20ANY%20WARRANTY%3B%20without%20even%20the%20implied%20warranty%20of%0AMERCHANTABILITY%20or%20FITNESS%20FOR%20A%20PARTICULAR%20PURPOSE.%20%20See%20the%0AGNU%20General%20Public%20License%20for%20more%20details.%0A%0AYou%20should%20have%20received%20a%20copy%20of%20the%20GNU%20General%20Public%20License%0Aalong%20with%20this%20program%3B%20if%20not%2C%20write%20to%20the%20Free%20Software%0AFoundation%2C%20Inc.%2C%2051%20Franklin%20Street%2C%20Fifth%20Floor%2C%20Boston%2C%20MA%20%2002110-1301%2C%20USA.");
+
+//Version de WACH
+const WACH_VERSION = "WACH_STABLE_1.0";
+
+//Type de jeu
+const TYPE_TAT = 0; 	//Texte a trous
+const TYPE_QUIZ = 1;	//Quiz
+const TYPE_QCM = 2;		//QCM
+const TYPE_MC = 3;		//Mot croisé
+
+//status
+const STATUS_N = 0;					//Normal
+const STATUS_WAIT = 1;			//Attente de œ
+const STATUS_TE_WAIT = 2;		//Attente de Text edit
+const STATUS_IE_WAIT = 3;		//Attente de Image Edit
+
+//=====FIN CONSTANCE=====
+
+//=====CLASSE: WACH Object=====
+//Classe principale
+
+//Constructeur
+function WACH(){
+		//Attribut
+		//Statut
+		this.status = null;
+		//Type de jeu
+		this.gameType = -1;
+		//Objet a la'aide au pointage
+		this.point = null;
+
+		//initialisation du type
+		this.GetType();
+		//Creation du status
+		this.status = new WACHStatus(this.GetType());
+		//Init des event
+		this.event = new WACHEvent();
+		//Init des fenetre
+		this.windows = new WACHWindows();
+		//Backup des reponses
+		this.backup = null;
+
+		//Savecontainer du TE et IE
+		this.TEContainer = {
+			target: null,
+			pointAcc: document.body,
+			pointAccColor: document.body.style["background-color"],
+		}
+		this.IEContainer = {
+			target: null,
+			pointAcc: null,
+		}
 }
 
-//Lis une réponse
-//1 Parametres
-//id -> id de la réponse a lire
-//return -> la reponse
-function CHGAn(id, sid = 0){
-    if (CHType == 0) return I[id][1][0][0]
-    if (CHType == 1) return I[id][3][0][0]
-    if (CHType == 2) return CHGStrTBool(I[id][3][sid][1])
-    if (CHType == 3) return L[id][sid]
+//Methode
+
+/*GetType: retourne le type ou le definis si celui ci est a -1
+	@return=(int) type
+*/
+WACH.prototype.GetType = function(){
+	//Si le type est déja défini
+	if (this.gameType != -1)
+		return this.gameType;
+
+	//Sinon:
+	//Detection des type
+	if (typeof L === 'undefined'){
+			if (typeof I[0][1] == "string"){
+					if(I[0][3].length == 1)
+						return this.gameType = TYPE_QUIZ
+					else
+						return this.gameType = TYPE_QCM
+			}else{
+					return this.gameType = TYPE_TAT
+			}
+	}
+	else
+		return this.gameType = TYPE_MC
 }
 
-//Lis toute les réponse
-//0 Parametre
-//return -> un tableau de string -> chaque réponse
-function CHGAns(){
-    //tableau de sortie
-    var ret = [];
-    //Pour les Quizz et TAT
-    if (CHType == 0 || CHType == 1){
-        //Pour chaque réponse (Entrée dans I)
-        for (var i=0; i<I.length; i++){
-            //On utilise CHGAn et écris dans ret
-            ret[i] = CHGAn(i);
-        }
-    }
-    //Pour les QCM
-    if (CHType == 2){
-        //Pour chaque question
-        for (var i=0; i < I.length; i++){
-            //On fait le bloc que Question
-            var QBloc = [];
-            //On for les response
-            for (var j=0; j < I[i][3].length; j++){
-                QBloc[j] = CHGAn(i, j);
-            }
-            //on save
-            ret[i] = QBloc;
-        }
-    }
-    //Pour les MotsCroisé
-    if (CHType == 3){
-        //On s'embete Pas!
-        //ret = L;
-        //Non! Réecriture complete pour eviter le LINK
-        for (var i = 0; i<L.length; i++){
-            ret[i] = []
-            for(var j = 0; j<L[i].length; j++){
-                ret[i][j] = L[i][j]
-            }
-        }
-    }
-    return ret;
+/*GetAwnser: retourne la reponse a partir de l'id (ou l'id + le sub-id)
+	@settings(id)=(int) id de la reponse
+	@settings(sid)=(int) sub-id de la reponse
+	@return=(string) la reponse
+*/
+WACH.prototype.GetAwnser = function (id, sid=0) {
+	if (this.gameType == TYPE_TAT) return I[id][1][0][0]
+	if (this.gameType == TYPE_QUIZ) return I[id][3][0][0]
+	if (this.gameType == TYPE_QCM)
+	  return WACHUtil.awnserParseBool(I[id][3][sid][1])
+	if (this.gameType == TYPE_MC) return L[id][sid]
+};
+
+/*GetQuestion: retourne la question pour les type a question
+	@settings(id)=(int) ID de la question
+	@return=(string) question
+*/
+WACH.prototype.GetQuestion = function (id) {
+	//Check du type
+	if(this.GetType() == TYPE_QUIZ || this.GetType() == TYPE_QCM)
+		return document.getElementById("Q_" + id).children[0].innerText
+	return "WACH::GetQuestion(Wrong Type Call)";
+};
+
+/*GetAwnserLabel: retourne le contenu de la réponse pour les QCM
+	@settings(id)=(int) Id de la question
+	@settings(sid)=(int) SId de la question
+	@return=(string)Contenu de la réponse
+*/
+WACH.prototype.GetAwnserLabel = function (id, sid) {
+	//return I[id][3][sid][0];
+	//On prefere la methode a recuperer dans l'HTML pour si l'utilisateur a modifier
+	//le libélé via TextEdit
+
+	//On prend l'élément suivant le boutton pour ne pas avoir le ? du boutton
+	return document.getElementById("Q_" + id + "_" + sid + "_Btn").nextSibling.textContent
+};
+
+/*EditAwnser: modifie une reponse
+	@settings(id)=(int) id de la reponse
+	@settings(ans)=(string) reponse
+	@settings(sid)=(int) sid de la reponse
+*/
+WACH.prototype.EditAwnser = function (id, ans, sid = 0) {
+	if(this.GetType() == TYPE_TAT)	I[id][1][0][0] = ans;
+	if(this.GetType() == TYPE_QUIZ)	I[id][3][0][0] = ans;
+	if(this.GetType() == TYPE_QCM){
+		//Vrai
+		if(ans){
+			//Config
+			I[id][3][sid][2] = 1;
+			I[id][3][sid][3] = 100;
+			I[id][3][sid][4] = 1;
+			I[id][3][sid][1] = DefaultRight;
+		}
+		//Faux
+		else{
+			//Config
+			I[id][3][sid][2] = 0;
+			I[id][3][sid][3] = 0;
+			I[id][3][sid][4] = 1;
+			I[id][3][sid][1] = DefaultWrong;
+		}
+	}
+	if(this.GetType() == TYPE_MC){
+		L[id][sid] = ans
+	}
+
+};
+
+/*EditAllAwnsers: modifie toute les reponse
+	@settings(nans)=(array 1D :: string) reponse
+	@return=(void)
+*/
+WACH.prototype.EditAllAwnsers = function (NAns) {
+	//Pour les types TAT et Quizz
+	if(this.GetType() == TYPE_TAT || this.GetType() == TYPE_QUIZ){
+		//On for et EditAwnser
+		for (var i = 0; i < NAns.length; i++)
+			this.EditAwnser(i, NAns[i]);
+	}
+	else if (this.GetType() == TYPE_QCM){
+		//QCM
+		//On for
+		for (var i = 0; i < NAns.length; i++){
+			//On parse
+			var parsed = WACHUtil.stringListToBoolList(NAns[i]);
+			//Re for
+			for (var j = 0; j < parsed.length; j++)
+				this.EditAwnser(i, parsed[j], j)
+		}
+	}
+	else if (this.GetType() == TYPE_MC){
+		//MC
+		//DOuble for
+		for (var i = 0; i < NAns.length; i++){
+			for (var j = 0; j < NAns[i].length; j++)
+				this.EditAwnser(i, NAns[i][j], j);
+		}
+	}
+
+};
+
+/*GetAllAwnsers: retourne toute les reponse dans un tableau
+	@return=(array 1D :: string) reponse
+	OR
+	@return=(array 2D :: string) reponse
+*/
+WACH.prototype.GetAllAwnsers = function () {
+		//Tableu de sortie
+		var retour = [];
+
+		//Pour les TAT
+		var tatmethod = function(){
+				//Pour chaque entree de I
+				for (var i = 0; i<I.length; i++)
+					retour[i] = WACHInstance.GetAwnser(i);
+				return retour;
+		}
+
+		//Pour les Quizz
+		var quizzmethod = tatmethod;
+
+		//Pour les QCM
+		var qcmmethod = function(){
+				//Pour chaque question
+				for (var i = 0; i < I.length; i++){
+					//Tableu 2D
+					var QBloc = [];
+					for (var j = 0; j < I[i][3].length; j++)
+						QBloc[j] = WACHInstance.GetAwnser(i, j);
+					retour[i] = QBloc
+				}
+				return retour;
+		}
+
+		//Pour les MC
+		var mcmethod = function(){
+				//Clone de L
+				for (var i = 0; i<L.length; i++){
+					retour[i] = [];
+					for (var j = 0; j<L[i].length; j++)
+						retour[i][j] = L[i][j]
+				}
+				return retour
+		}
+
+		//execution
+		switch (this.GetType()) {
+			case TYPE_TAT:
+				return tatmethod();
+				break;
+			case TYPE_QUIZ:
+				return quizzmethod();
+				break;
+			case TYPE_QCM:
+				return qcmmethod();
+				break;
+			case TYPE_MC:
+				return mcmethod();
+				break;
+			default:
+				alert("WACH::ERROR::WACHInstance.GetAllAwnsers (INVALID TYPE)");
+				return retour;
+		}
+};
+
+//=====FIN CLASSE=====
+
+//=====CLASSE STATUS=====
+//Classe du status de WACH
+
+//Constrcuteur
+function WACHStatus(newGameType){
+		//Definis le status à zero
+		this.status = STATUS_N;
+		//Definis le game type
+		this.gameType = newGameType;
+		//Definis le WAIT block
+		this.waitBlock = null;
+		// + Wait block de TE et IE
+		this.waitBlockTE = null;
+		this.waitBlockIE = null;
+		//Et initialize le status texte
+		this.CreateBlock();
 }
 
-//Affiche un message avec toute les réponse
-//0 Parametre
-//return -> un Div du contenu de la fenetre affichié
-function CHPAns(){
-    //On récupere les réponse dans un tableau
-    var ans = CHGAns();
-    
-    //Creé un DIV id=CHPAns_div qui contiendra le tout
-    var mainDiv = document.createElement('div');
-    mainDiv.id = 'CHPAns_div';
-    
-    //En QCM on ajoute un texte d'aide
-    if (CHType == 2){
-        mainDiv.appendChild(document.createTextNode('true -> vrai false -> faux'))
-        mainDiv.appendChild(document.createElement('br'))
-    }
-    
-    var boucle = true
-    
-    //En mot croisé on utilise la fonction spétiale
-    if (CHType == 3){
-        mainDiv.appendChild(CHPAnsMC(ans));
-        boucle = false;
-    }
-    
-    //Pour chaque réponse
-    if (boucle) {for (var i=0; i<ans.length; i++){
-        //On affiche le numéro de la réponse
-        mainDiv.appendChild(document.createTextNode('Rep N'))
-        mainDiv.appendChild(document.createTextNode(i))
-        mainDiv.appendChild(document.createTextNode(': '))
-        //Si on est dans un quizz ou un QCM on affiche la question
-        if (CHType == 1 || CHType == 2) mainDiv.innerHTML += "<button onClick=\"alert('"+html_encode(CHGQuizQuestion(i))+"')\">Q</button>"
-        //Et son contenu
-        //En mode Quizz / TAT
-        if (CHType == 1 || CHType == 0) mainDiv.appendChild(document.createTextNode(ans[i]))
-        //QCM
-        if (CHType == 2){
-            for (var j = 0; j < ans[i].length; j++){
-                mainDiv.appendChild(document.createTextNode(ans[i][j] + " "))
-            }
-        }
-        //+ A la ligne
-        mainDiv.appendChild(document.createElement('br'))
-    }}
-    
-    //On affiche le tout avec ShowMessage de la library de WebAllemend
-    ShowMessage(mainDiv.innerHTML)
-    
-    return mainDiv
+//Méthode
+
+/*GetStatus: retourne le status
+	@return=(int) status
+*/
+WACHStatus.prototype.GetStatus = function(){
+		return this.status;
 }
 
-//Lis la touche appuyer
-//1 Parametre
-//e -> objet event fournis par le navigateur
-function CHRKey(e){
-    //Le œ en mode Classique
-    if (e.keyCode == 0 && CHStatus == 0){
-        //On passe en mode wait + affiche le message de wait
-        CHStatus = 1;
-        document.getElementById('CHPWait').style = 'display: inline'
-    }
-    //Le S en mode Wait
-    if (e.keyCode == 83 && CHStatus == 1){
-        //On passe en mode classique + suprime le message de wait
-        CHStatus = 0;
-        document.getElementById('CHPWait').style = 'display: none'
-        
-        //Et on affiche les réponse
-        CHPAns()
-    }
-    //Le E en mode Wait
-    if (e.keyCode == 69 && CHStatus == 1){
-        //On passe en mode classique + suprime le message de wait
-        CHStatus = 0;
-        document.getElementById('CHPWait').style = 'display: none'
-        
-        //Et on affiche le formulaire
-        CHPEditForm()
-    }
-    //Le T en mode Wait
-    if (e.keyCode == 84 && CHStatus == 1){
-        //On passe en mode Text edit + suprime le message de wait
-        CHStatus = 2;
-        document.getElementById('CHPWait').style = 'display: none'
-    }
-    //Le I en mode Wait
-    if (e.keyCode == 73 && CHStatus == 1){
-        //On passe en mode Image Wait
-        CHStatus = 3;
-        //On masque le message de wait
-        document.getElementById('CHPWait').style = 'display: none'
-        //Et on met le message de Image Edit Wait
-        document.getElementById('CHPWaitIe').style = 'display: inline'
-    }
+/*CreateBlock: Cree le bloc d'attente de status
+	@return=(void)
+*/
+WACHStatus.prototype.CreateBlock = function () {
+
+	//Le type de jeu
+	var TStr = "ERROR wach.gameType not valid";
+  if (this.gameType == TYPE_QUIZ) var TStr = "Quizz";
+  if (this.gameType == TYPE_TAT) var TStr = "Texte a trous";
+  if (this.gameType == TYPE_QCM) var TStr = "QCM";
+  if (this.gameType == TYPE_MC) var TStr = "Mots Croise";
+
+	//Le div
+	var divBlock = document.createElement('div');
+	divBlock.id = 'wach_status.CreateBlock'
+
+	//Pas affiché
+	divBlock.style.display = 'none';
+
+	//Texte
+	divBlock.appendChild(
+		document.createTextNode("Attend touche œ / VERSION: '" +
+		WACH_VERSION +
+		 "'	" + TStr)
+	);
+
+	//Ajout au body
+	document.body.appendChild(divBlock);
+
+	//On ecrit dans this.waitBlock
+	this.waitBlock = document.getElementById('wach_status.CreateBlock');
+
+
+	//Wait block Text Edit
+	this.waitBlockTE = (function(){
+		block = document.createElement('div');
+		block.id = 'wach_status.CreateBlock.TE';
+		block.style.display = 'none';
+		block.appendChild(document.createTextNode("Attends Text Edit"));
+		document.body.appendChild(block);
+		return block;
+	})();
+
+	//Wait block Image Edit
+	this.waitBlockIE = (function(){
+		var block = document.createElement('div');
+		block.id = "wach_status.CreateBlock.IE";
+		block.style.display = 'none';
+		block.appendChild(document.createTextNode("Attends Image Edit"));
+		document.body.appendChild(block)
+		return block;
+	})();
+
+};
+
+/*SetStatus: definis le SetStatus
+	@settings(status)=(int) Le nouveau status
+*/
+WACHStatus.prototype.SetStatus = function (status) {
+	if (this.GetStatus() == status) return status;
+	//Mode Normal
+	if(status == STATUS_N){
+		//On masque le block
+		this.waitBlock.style.display = 'none';
+		this.waitBlockTE.style.display = 'none';
+		this.waitBlockIE.style.display = 'none';
+		//On save
+		this.status = status;
+	}
+
+	//Mode wait
+	if (status == STATUS_WAIT){
+		//On affiche le block
+		this.waitBlock.style.display = 'block';
+		this.waitBlockTE.style.display = 'none';
+		this.waitBlockIE.style.display = 'none';
+		//On Save
+		this.status = status;
+	}
+
+	//Mode Wait_TE
+	if(status == STATUS_TE_WAIT){
+		this.waitBlockTE.style.display = 'block';
+		this.waitBlock.style.display = 'none';
+		this.waitBlockIE.style.display = 'none';
+		this.status = status;
+	}
+
+	//Mode Wait_IE
+	if(status == STATUS_IE_WAIT){
+		this.waitBlockIE.style.display = 'block';
+		this.waitBlock.style.display = 'none';
+		this.waitBlockTE.style.display = 'none';
+		this.status = status;
+	}
+};
+
+//=====FIN CLASSE=====
+
+//====CLASSE UTIL=====
+//Fonction utilitaire
+
+//Constructeur
+function WACHUtilClass(){
+	//requiert rien
+};
+
+/*awnserParseBool: parse la reponse pour les QCM
+	@settings(input)=(string) entrée
+	@return=(bool) true si vraie; false si faux
+*/
+WACHUtilClass.prototype.awnserParseBool = function (input) {
+	if (input == DefaultRight) return true;
+	return false;
+};
+
+/*htmlEncode: parse le texte pour les carractere htmlEncode
+	@settins(txt)=(string) entrée
+	@return=(string) sortie
+*/
+//Code par http://codes-sources.commentcamarche.net/source/54146-parser-les-caracteres-html-d-une-string
+//Merci a eux!
+WACHUtilClass.prototype.htmlEncode = function (txt) {
+	var reg = /^[\w-\/()\[\]?!*%:;.,'\s]+$/i;
+	var s = "";
+	var l = txt.length;
+	for (var i = 0; i < l; i++) {
+			var tn = txt[i];
+			//EDIT Ajout du '
+			if (tn == "'"){
+					s+= "\\'"
+			}
+			else if (!reg.test(tn)) {
+					s += "&#" + tn.charCodeAt(0) + ";";
+			} else {
+					s += tn;
+			}
+	}
+	return s;
+};
+
+/*stringListToBoolList: transforme une string -> "true,false,true"
+  en tableau [true, false, true]
+	@settings(input)=(bool) entrée
+	@return=(string) sorite
+*/
+WACHUtilClass.prototype.stringListToBoolList = function (input) {
+	//retour + split
+	var ret = [];
+	var splited = input.split(',');
+
+	//Le for
+	for (var i = 0; i<splited.length; i++){
+		if(splited[i] == "true") ret[i] = true;
+		if(splited[i] == "false") ret[i] = false;
+	}
+
+	return ret;
+};
+
+/*searchImage: recherche une image sur qwant
+	@settings(querry)=(strings) requette
+	@return(void)
+*/
+WACHUtilClass.prototype.searchImage = function (querry) {
+	window.open("https://www.qwant.com/?q="+ encodeURIComponent(querry) +"&t=images");
+};
+
+//=====FIN CLASS=====
+
+//=====CLASSE WACH WINDOWS=====
+//Differente fenetre de wach
+
+//Constructeur
+function WACHWindows(){
+	//requiert rien
 }
 
-//Crée le bloc du message de wait
-//0 Parametre
-function CHPWait(){
-    //On ecrit notreCHType String
-    var TStr = "ERROR CHType not valid";
-    if (CHType == 1) var TStr = "Quizz";
-    if (CHType == 0) var TStr = "Texte a trous";
-    if (CHType == 2) var TStr = "QCM";
-    if (CHType == 3) var TStr = "Mots Croise";
-    
-    //On cree notre DIV id=CHPWait
-    var mainDiv = document.createElement('div');
-    mainDiv.id = 'CHPWait'
-    
-    //On ne l'affiche pas
-    mainDiv.style = 'display: none'
-    
-    //Et on entre notre texte
-    mainDiv.appendChild(document.createTextNode('Attend Touche œ / VERSION: ' + CHVER + ' / ' + TStr))
-    
-    //On merge le tout a la fin du body
-    document.body.appendChild(mainDiv)
-    
-    //La meme chause avec le Image Edit Wait Text
-    var ieDiv = document.createElement('div');
-    ieDiv.id = 'CHPWaitIe'
-    ieDiv.style = 'display: none'
-    ieDiv.appendChild(document.createTextNode('Attend Image Edit / VERSION: ' + CHVER + ' / ' + TStr))
-    document.body.appendChild(ieDiv)
+//Methode
+/*AwnserWindow: affiche la fenetre des reponse
+	@return=(object::dom) DIV de la fenetre
+*/
+WACHWindows.prototype.AwnserWindow = function () {
+		//Recuperation des reponse
+		var ans = WACHInstance.GetAllAwnsers();
+
+		//Creation du div
+		var mainDiv = document.createElement('div');
+		mainDiv.id = 'WACHWindows.AwnserWindow';
+
+		//Texte d'aide (true / false) en QCM
+		if(WACHInstance.GetType() == TYPE_QCM){
+			mainDiv.appendChild(document.createTextNode('true -> vrai false -> faux'));
+			mainDiv.appendChild(document.createElement('br'));
+		}
+
+		//Fonction mot croisé
+		var mcmethod = function(){
+			//Le Tableau
+			var table = document.createElement('table');
+			//Pour chaque ligne...
+			for (var i = 0; i < ans.length; i++){
+				//On cree la ligne
+				var tr = document.createElement('tr');
+				//... et colonne
+				for (var j = 0; j < ans[i].length; j++){
+					//On cree la cellule
+					var td = document.createElement('td');
+					//on y met l'ans.
+					td.innerText = ans[i][j]
+					//On merge
+					tr.appendChild(td);
+				}
+				//On merge
+				table.appendChild(tr);
+			}
+			mainDiv.appendChild(table);
+			return mainDiv
+		}
+
+		//Fonction autre
+		var othermethod = function(){
+			//Boucle principale
+			for (var i = 0; i<ans.length; i++){
+				//Numero de la question
+				mainDiv.appendChild(document.createTextNode('Rep N' + i + ': '));
+
+				//On get la question
+				var question = WACHUtil.htmlEncode(WACHInstance.GetQuestion(i));
+				//Question pour les type a question
+				if(WACHInstance.GetType() == TYPE_QCM || WACHInstance.GetType() ==  TYPE_QUIZ)
+					mainDiv.innerHTML += '<button onClick="alert(\'' +  question + '\')">Q</button>';
+
+				//Pour les QCM
+				if(WACHInstance.GetType() == TYPE_QCM){
+					//Plusieure reponse
+					for (var j = 0; j< ans[i].length ; j++)
+						mainDiv.appendChild(
+							document.createTextNode(WACHInstance.GetAwnserLabel(i,j) + ": "
+							 + ans[i][j] + " | ")
+						 );
+				}
+				//Autre type "clasique"
+				else
+						mainDiv.appendChild(document.createTextNode(ans[i]));
+
+				//A la ligne
+				mainDiv.appendChild(document.createElement('br'));
+			}
+			return mainDiv;
+		}
+
+		if (WACHInstance.GetType() == TYPE_MC) mcmethod();
+		else othermethod();
+
+		ShowMessage(mainDiv.outerHTML);
+		return mainDiv;
+};
+
+/*EditWindow: Affiche la fentre d'édition de réponse
+	@return=(object::dom) DIV de la fenetre
+*/
+WACHWindows.prototype.EditWindow = function () {
+	//=====Ctrl + C / Ctrl + V d'en haut
+	var ans = WACHInstance.GetAllAwnsers();
+
+	var mainDiv = document.createElement('div');
+	mainDiv.id = 'WACHWindows.EditWindow';
+
+	if(WACHInstance.GetType() == TYPE_QCM){
+		mainDiv.appendChild(document.createTextNode('true -> vrai false -> faux'));
+		mainDiv.appendChild(document.createElement('br'));
+	}
+
+	var othermethod = function(){
+		//On for
+		for (var i = 0; i < ans.length; i++){
+			//Ancienne réponse
+			//En QCM on affiche aussi les libélé de réponse
+			if(WACHInstance.GetType() == TYPE_QCM){
+				for(var j = 0; j < ans[i].length; j++){
+					var label = WACHInstance.GetAwnserLabel(i, j);
+					mainDiv.appendChild(document.createTextNode(
+						label + ": " + ans[i][j] + "|"
+					))
+				}
+			}else{
+				mainDiv.appendChild(document.createTextNode(ans[i] + "->"))
+			}
+
+			//Question pour les type a question
+			var question = WACHUtil.htmlEncode(WACHInstance.GetQuestion(i));
+			if(WACHInstance.GetType() == TYPE_QCM || WACHInstance.GetType() ==  TYPE_QUIZ)
+				mainDiv.innerHTML += '<button onClick="alert(\'' +  question + '\')">Q</button>';
+
+			//Champs de saise
+			var champs = document.createElement('input');
+			champs.setAttribute('type', 'text');
+			champs.setAttribute('value', ans[i]);
+			champs.setAttribute('id', 'WACHWindows.EditWindow.Q' + i)
+			mainDiv.appendChild(champs)
+
+			//Boutton de reset
+			var resetBtn = document.createElement('button');
+			resetBtn.setAttribute("onclick", "WACHInstance.event.onClickReset(" + i + ")");
+			resetBtn.appendChild(document.createTextNode("R"));
+			mainDiv.appendChild(resetBtn);
+
+			//Br+Hr
+			mainDiv.appendChild(document.createElement('br'));
+			mainDiv.appendChild(document.createElement('hr'));
+		}
+
+		//Boutton de save
+		var saveBtn = document.createElement('button');
+		saveBtn.setAttribute("onclick", "WACHInstance.event.onClickSave();HideFeedback();");
+		saveBtn.appendChild(document.createTextNode("SAVE"));
+		mainDiv.appendChild(saveBtn);
+
+		//On affiche
+		ShowMessage(mainDiv.outerHTML);
+
+		return mainDiv;
+	}
+
+	var mcmethod = function(){
+		//Table de base + btn save
+		var table = document.createElement('table')
+		table.id = "WACHWindows.EditWindow.mcmethod"
+
+		var savetr = document.createElement('tr');
+		var savetd = document.createElement('td');
+		var savebtn = document.createElement('button');
+		savebtn.innerText = 'SAVE';
+		savebtn.setAttribute('onclick',
+		  "WACHInstance.event.onClickSave();\
+			document.getElementById('WACHWindows.EditWindow.mcmethod').remove()");
+
+		savetd.appendChild(savebtn);
+		savetd.setAttribute('colspan', ans[0].length)
+
+		savetr.appendChild(savetd);
+		table.appendChild(savetr);
+
+		//On double for
+		for(var i = 0; i < ans.length; i++){
+			var tr = document.createElement('tr');
+			for(var j = 0; j < ans[i].length; j++){
+				var td = document.createElement('td');
+
+				//Champs de Texte
+				var input = document.createElement('input')
+				input.setAttribute('type', 'text');
+				input.setAttribute('value', ans[i][j]);
+				input.style.width = '10px';
+				input.id = 'WACHWindows.EditWindow.mcmethod.Q' + i + "_" + j;
+
+				td.appendChild(input);
+				tr.appendChild(td);
+			}
+			//Btn de reset
+			var resetTd = document.createElement('td');
+			var resetBtn = document.createElement('button');
+			resetBtn.innerText = "R";
+			resetBtn.setAttribute('onclick', 'WACHInstance.event.onClickReset(' + i + ')');
+			resetTd.appendChild(resetBtn);
+			tr.appendChild(resetTd);
+
+			table.appendChild(tr);
+		}
+
+		document.body.appendChild(table);
+
+		mainDiv.appendChild(document.createTextNode
+			("Pour manque de place, l'édition se fait en bas de page.")
+		);
+		ShowMessage(mainDiv.outerHTML);
+	}
+
+	if(WACHInstance.GetType() == TYPE_MC)	mcmethod();
+	else 																	othermethod();
+};
+
+/*TextEditWindow : Fenetre d'édition du texte
+	@settings(target) = (object::dom) Target of the text edit
+	@return = (object::dom) Return Div
+*/
+WACHWindows.prototype.TextEditWindow = function(target) {
+	var div = document.createElement('div');
+	div.id = "WACHWindows.TextEditWindow";
+
+	//Final TE value
+	var j = 0;
+
+	//Pour chaque enfant
+	for(var i = 0; i < target.childNodes.length; i++){
+		if(target.childNodes[i].nodeName == "#text"){
+			//Ajout du input
+			var input = document.createElement('input');
+			input.setAttribute('type', 'text');
+			input.setAttribute('value', target.childNodes[i].textContent);
+			input.setAttribute('id', "WACHWindows.TextEditWindow.I" + j);
+
+			j++;
+
+			div.appendChild(input);
+			div.appendChild(document.createElement('br'));
+		}
+	}
+
+	div.setAttribute("valueNum", j);
+
+	//SAVE
+	var saveBtn = document.createElement('button');
+	saveBtn.innerText = "SAVE";
+	saveBtn.setAttribute('onclick', 'WACHInstance.event.onClickSaveTE();HideFeedback();');
+
+	div.appendChild(saveBtn);
+
+	ShowMessage(div.outerHTML);
+	return div;
+};
+
+/*ImageEditWindow: Fenetre d'édition d'Image
+  @settings(target) = (object::dom) Target of the text edit
+	@return = (object::dom) Return Div
+*/
+WACHWindows.prototype.ImageEditWindow = function (target) {
+	var div = document.createElement('div');
+	div.id = "WACHWindows.ImageEditWindow";
+
+	//Zone de l'url
+	div.appendChild(document.createTextNode('URL: '));
+	var urlZone = document.createElement('input');
+	urlZone.setAttribute('type', 'text');
+	urlZone.setAttribute('id', 'WACHWindows.ImageEditWindow.url');
+	urlZone.setAttribute('value', target.src);
+	div.appendChild(urlZone);
+
+	//Boutton de save
+	var saveBtn = document.createElement('button');
+	saveBtn.setAttribute("onclick", "WACHInstance.event.onClickSaveIE();HideFeedback();")
+	saveBtn.innerText = "SAVE";
+	div.appendChild(saveBtn);
+
+	div.appendChild(document.createElement('br'));
+
+	//Zone de recherche
+	div.appendChild(document.createTextNode('QWANT: '));
+	var searchZone = document.createElement('input');
+	searchZone.setAttribute('type', 'text');
+	searchZone.setAttribute('id', 'WACHWindows.ImageEditWindow.search');
+	searchZone.setAttribute('value', '');
+	div.appendChild(searchZone);
+
+	//Boutton de recherche
+	var searchBtn = document.createElement('button');
+	searchBtn.setAttribute("onclick",
+	 "WACHUtil.searchImage(\
+		 document.getElementById('WACHWindows.ImageEditWindow.search').value\
+	 )"
+  );
+	searchBtn.innerText = "SEARCH";
+	div.appendChild(searchBtn);
+
+	div.appendChild(document.createElement('br'));
+
+	div.appendChild(document.createTextNode("\
+		Pour utiliser Qwant: \
+		Faites une recherche puis selectionnez l'image, une fois l'image affichée en grand\
+	  click droit sur plein écran puis copier l'addresse du lien\
+		collez la dans le champs url et sauvegardez.\
+	"))
+
+	ShowMessage(div.outerHTML);
+	return div;
+
+};
+
+//=====FIN CLASSE=====
+
+//====CLASSE EVENT=====
+//Classe s'occupant des event
+
+//Constructeur
+function WACHEvent(){
+	//Definition des event
+	document.onkeydown = this.onKey;
+	document.onclick = this.onClick;
+	document.onmousemove = this.onMove;
 }
 
-//Sauvegarde les nouvelle réponse dans I
-//1 Parametre
-//NAns -> Tableau de string -> Chaque réponse
-function CHPEditSave(NAns){
-    //En mode TAT
-    if (CHType == 0){
-        //Pour chaque entrée de NAns
-        for (var i=0; i<NAns.length; i++){
-            //On s'écrit dans I
-            I[i][1][0][0] = NAns[i]
-        }
-    }if (CHType == 1){
-            //Pour chaque entrée de NAns
-        for (var i=0; i<NAns.length; i++){
-            //On s'écrit dans I
-            I[i][3][0][0] = NAns[i]
-        }
-    }if (CHType == 2){
-        //Pour chaque question
-        for (var i=0; i<NAns.length; i++){
-            //On parse
-            var parsed = CHGParseBool(NAns[i]);
-            //Pour chaque reponse
-            for (var j=0; j<I[i][3].length; j++){
-                //Vrai
-                if(parsed[j]){
-                    //On met les cofig de calcul
-                    I[i][3][j][2] = 1;
-                    I[i][3][j][3] = 100;
-                    I[i][3][j][4] = 1;
-                    //Et de texte
-                    I[i][3][j][1] = DefaultRight;
-                }//faux
-                else{
-                    //On met les cofig de calcul
-                    I[i][3][j][2] = 0;
-                    I[i][3][j][3] = 0;
-                    I[i][3][j][4] = 1;
-                    //Et de texte
-                    I[i][3][j][1] = DefaultWrong;
-                }
-            }
-        }
-    }if(CHType == 3){
-        //Pour les MC
-        //Pour chaque ligne
-        for (var i=0; i<NAns.length; i++){
-            //Pour chaque collone
-            for (var j=0; j<NAns[i].length; j++){
-                //On Save
-                L[i][j] = NAns[i][j]
-            }
-        }
-    }
+/* onKey: Appelé lors de l'appui d'une touche
+	@settings(e) = (object::event) Evenement detecté par le naviagteur
+*/
+WACHEvent.prototype.onKey = function (e) {
+	//Le œ en classique
+	if ((e.keyCode == 0 || e.keyCode == 192)&& WACHInstance.status.GetStatus() == STATUS_N)
+		WACHInstance.status.SetStatus(STATUS_WAIT);
+	//Le S en wait
+	if(e.keyCode == 83 && WACHInstance.status.GetStatus() == STATUS_WAIT){
+		WACHInstance.status.SetStatus(STATUS_N);
+		WACHInstance.windows.AwnserWindow();
+	}
+	//Le E en wait
+	if(e.keyCode == 69 && WACHInstance.status.GetStatus() == STATUS_WAIT){
+		WACHInstance.status.SetStatus(STATUS_N);
+		WACHInstance.windows.EditWindow();
+	}
+	//Le T en wait
+	if(e.keyCode == 84 && WACHInstance.status.GetStatus() == STATUS_WAIT){
+		WACHInstance.status.SetStatus(STATUS_TE_WAIT);
+	}
+	//Le I en wait
+	if(e.keyCode == 73 && WACHInstance.status.GetStatus() == STATUS_WAIT){
+		WACHInstance.status.SetStatus(STATUS_IE_WAIT);
+	}
+};
+
+/*onClickReset: reset l'entrée dans la fenetre d'édition
+	@settings(id)=(int) ID de l'entrée
+	@return(void)
+*/
+WACHEvent.prototype.onClickReset = function (id) {
+	//Pour un MC
+	if(WACHInstance.GetType() == TYPE_MC){
+		//Pour chaque colonne de la ligne
+		for (var i = 0; i < L[id].length; i++){
+			document.getElementById
+			  ("WACHWindows.EditWindow.mcmethod.Q" + id + "_" + i).value =
+				WACHInstance.backup[id][i];
+		}
+	}
+	//Pour le reste
+	else{
+		document.getElementById("WACHWindows.EditWindow.Q" + id).value =
+			WACHInstance.backup[id];
+	}
+};
+
+/*onClickSave: save l'entrée de la fenetre d'édition
+	@return(array 1D :: string) = réponses
+*/
+WACHEvent.prototype.onClickSave = function () {
+	var ret = [];
+
+	//Pour les MC
+	if(WACHInstance.GetType() == TYPE_MC){
+		//On double for d'apres L
+		for (var i = 0; i < L.length; i++){
+			ret[i] = [];
+			for (var j = 0; j < L[i].length; j++){
+				ret[i][j] = document.getElementById
+				("WACHWindows.EditWindow.mcmethod.Q" + i + "_" + j).value.charAt(0);
+			}
+		}
+	}//Les autre
+	else{
+		//Pour chaque réponse d'après le length de I
+		for (var i = 0; i<I.length; i++)
+			ret[i] = document.getElementById("WACHWindows.EditWindow.Q" + i).value;
+	}
+
+	WACHInstance.EditAllAwnsers(ret);
+	return ret;
+};
+
+/*onClick: lors du clique sur le document
+	@settings(e) = (object::event) Objet Event du browser
+	@return(void)
+*/
+WACHEvent.prototype.onClick = function(e){
+	//En TE
+	if(WACHInstance.status.GetStatus() == STATUS_TE_WAIT){
+		WACHInstance.TEContainer.target = e.target;
+		WACHInstance.windows.TextEditWindow(e.target);
+		WACHInstance.status.SetStatus(STATUS_N);
+	}
+	//En IE
+	if(WACHInstance.status.GetStatus() == STATUS_IE_WAIT && e.target.tagName.toLowerCase() == "img"){
+		WACHInstance.IEContainer.target = e.target;
+		WACHInstance.windows.ImageEditWindow(e.target);
+		WACHInstance.status.SetStatus(STATUS_N);
+	}
+};
+
+/*onClickSaveTE: lors du click du save de TextEditWindow
+	@retrun(void)
+*/
+WACHEvent.prototype.onClickSaveTE = function () {
+	var div=document.getElementById("WACHWindows.TextEditWindow");
+	var target = WACHInstance.TEContainer.target;
+	var targets = [];
+	for (var i = 0; i < target.childNodes.length; i++){
+		if(target.childNodes[i].nodeName == "#text")
+			targets.push(target.childNodes[i]);
+	}
+
+	//Get all value in TE windows
+	for(var i = 0; i < div.getAttribute("valueNum"); i++){
+		var value = document.getElementById("WACHWindows.TextEditWindow.I" + i).value;
+		targets[i].textContent = value;
+	}
+
+};
+
+/*onClickSaveIE: lors du click du save de ImageEditWindow
+ @return(void)
+*/
+WACHEvent.prototype.onClickSaveIE = function () {
+	WACHInstance.IEContainer.target.src =
+	 document.getElementById("WACHWindows.ImageEditWindow.url").value;
+};
+
+/*onMove: lors du mouvement de la souris
+	@settings(e) = (object::event) Object event du browser
+	@return(void)
+*/
+
+WACHEvent.prototype.onMove = function(e){
+	if(WACHInstance.status.GetStatus() == STATUS_TE_WAIT){
+		WACHInstance.TEContainer.pointAcc.style["background-color"] = WACHInstance.TEContainer.pointAccColor;
+		WACHInstance.TEContainer.pointAcc = e.target;
+		WACHInstance.TEContainer.pointAccColor = e.target.style["background-color"];
+		e.target.style["background-color"] = "grey";
+	}
+	else if (WACHInstance.status.GetStatus() != STATUS_TE_WAIT && WACHInstance.TEContainer.pointAcc != document.body) {
+		WACHInstance.TEContainer.pointAcc.style["background-color"] = WACHInstance.TEContainer.pointAccColor;
+		WACHInstance.TEContainer.pointAcc = document.body;
+		WACHInstance.TEContainer.pointAccColor = document.body.style["background-color"];
+	}
+
+	if (WACHInstance.status.GetStatus() == STATUS_IE_WAIT && e.target.tagName.toLowerCase() == "img"){
+		if(WACHInstance.IEContainer.pointAcc != null)
+			WACHInstance.IEContainer.pointAcc.style["border"] = "";
+		WACHInstance.IEContainer.pointAcc = e.target;
+		e.target.style["border"] = "10px solid grey";
+	}
+	else if (WACHInstance.status.GetStatus() != STATUS_IE_WAIT && WACHInstance.IEContainer.pointAcc != null){
+		WACHInstance.IEContainer.pointAcc.style["border"] = "";
+		WACHInstance.IEContainer.pointAcc = null;
+	}
 }
 
-//Affiche le formulaire d'édition de Réponse
-//0 Parametre
-//return -> Un div du contenu de la fenetre affiché
-function CHPEditForm(){
-    //On crée notre DIV id=CHPEditForm
-    var mainDiv = document.createElement('div')
-    mainDiv.id = 'CHPEditForm'
-    
-    //On récupère les question
-    var ans = CHGAns()
-    
-    //En MC
-    if (CHType == 3){
-        //On affiche le formulaire en bas de page
-        document.body.innerHTML += CHPEditMC(ans).outerHTML
-        //Et on met une fenetre d'avertissement
-        ShowMessage("Pour Manque de place l'edition se fait en bas de page")
-        //Et voila!
-        return null;
-    }
-    
-    //Pour chaque question
-    for (var i = 0; i < ans.length; i++){
-        //On marque l'ancienne réponse
-        mainDiv.appendChild(document.createTextNode(ans[i] + "->"))
-        
-        //Si on est dans un quizz / QCM on met la question
-        if (CHType == 1 || CHType == 2) mainDiv.innerHTML += "<button onClick=\"alert('"+html_encode(CHGQuizQuestion(i))+"')\">Q</button>"
-        
-        //On met le champ de texte avec value=L'anciienne réponse et ID=CHPEditForm_Q + l'id de la question
-        mainDiv.innerHTML += '<input type="text" value="' + ans[i] + '" id="CHPEditForm_Q'+ i +'"\>'
-        
-        //On ajoute un boutton de reset -> CHPEditReset avec en Parametre l'id de la question actuelle
-        mainDiv.innerHTML += '<button onClick="CHPEditReset(' + i + ')">R</button>'
-        
-        //Et on saute la ligne
-        mainDiv.appendChild(document.createElement('br'))
-    }
-    
-    //On fait un boutton de SAVE
-    //Fait un CHPEditSave de CHPEditGet
-    //+Ferme la fenetre avec HideFeedback de la library de web allemend
-    mainDiv.innerHTML += '<button onclick="CHPEditSave(CHPEditGet()); HideFeedback()">SAVE</button>'
-    
-    //Affiche le message avec la library de web allemend
-    ShowMessage(mainDiv.innerHTML)
-    
-    return mainDiv
+//====FIN CLASSE=====
+
+//Instance de wach
+WACHUtil = new WACHUtilClass();
+WACHInstance = new WACH();
+//Backup des reponses hors de la classe
+//Sinon tous bug...
+WACHInstance.backup = WACHInstance.GetAllAwnsers();
+console.log("%c" + welcomeText + "%c\n\nWACH Inited!", "background: none; color: red; font-weight: bold;", "background: yellow; color: blue");
+
 }
 
-//Récupère les réponse d'un CHPEditForm
-//0 Parametre
-//return -> array de string -> reponse
-function CHPEditGet(){
-    //Tableau de sortie
-    var ret = []
-    
-    //Pour les MC
-    if(CHType == 3){
-        //Pour chaque ligne (d'après L)
-        for (var i=0; i<L.length; i++){
-            //Pour chaque collone
-            ret[i] = []
-            for (var j=0; j<L[i].length; j++){
-                //On recupere le text
-                ret[i][j] = document.getElementById("CHPEditMCQ_" + i + "_" + j).value
-            }
-    }
-    }else{
-        //Pour chaque réponse (d'après le length de I)
-        for (var i=0; i<I.length; i++){
-            //On récupère la value de CHPEditForm_Q + i et le stoque dans ret[i]
-            ret[i] = document.getElementById("CHPEditForm_Q" + i).value
-        }
-    }
-    
-    return ret
+//====Sinon=====
+else{
+	alert("ERREUR: Double instance de WACH");
+	console.log("%cE:WACH DOUBLE Instance%c", "background: red; color: yellow; font-weight: bold")
 }
-
-//Réinitialise les réponse d'un champs d'un CHPEditForm
-//1 Parametre
-//id -> l'id de la réponse a reset
-function CHPEditReset(id){
-    //Dans un MC
-    if (CHType == 3){
-        //Pour chaque collone de la ligne
-        for (var i = 0; i<L[id].length; i++){
-            //On reset la cellule
-            document.getElementById("CHPEditMCQ_"+id+"_"+i).value = CHBackup[id][i]
-        }
-    }else{
-        //On récupère dans le CHBackup à l'id et on stoque dans la value de CHPEditForm_Q + id
-        document.getElementById("CHPEditForm_Q" + id).value = CHBackup[id]
-
-    }
-}
-
-//Quand la souris Clique
-//1 parametre
-//e -> Objet d'event du navigateur
-function CHRClick(e){
-    //Si le mode de Text Edit est actié
-    if (CHStatus == 2){
-        //On Ouvrre le formulaire de TextEdit
-        CHPTeForm(e.target)
-        //Et on passe en mode classique
-        CHStatus = 0;
-    }
-    //Si le mode Image Edit est activé
-    if (CHStatus == 3){
-        //On ouvre le formulaire de ImageEdit
-        CHPIeForm(e.target)
-        //Et on passe en mode classique
-        CHStatus = 0;
-        //Et on retire le le message de wait
-        document.getElementById('CHPWaitIe').style = 'display: none'
-        
-    }
-}
-
-//Ouvre le formulaire de textedit
-//1 Parametre
-//source -> la ou l'utilisateur a clique
-//return -> le div de base du form
-function CHPTeForm(source){
-    //On sauvegarde la source
-    CHTESource = source;
-    
-    //On cree notre div de base id=CHPTeForm
-    var div = document.createElement('div')
-    div.id = "CHPTeForm"
-    
-    //Pour chaque enfant
-    for (var i=0; i<source.childNodes.length; i++){
-        //Si c'est du texte
-        if (source.childNodes[i].nodeName == "#text"){
-            //On ajoute une entrée pour lui du formulaire
-            //Un Input de type text
-            var txtIn = document.createElement('input')
-            txtIn.setAttribute('type', 'text')
-            
-            //Avec en id CHPTeForm_I + i
-            txtIn.setAttribute('id', 'CHPTeForm_I' + i)
-            
-            //Et en pré value le texte de base
-            txtIn.setAttribute('value', source.childNodes[i].textContent)
-            
-            //On merge
-            div.appendChild(txtIn)
-            
-            //+ saut de ligne
-            div.appendChild(document.createElement('br'))
-        }
-    }
-    
-    //On ajoute le boutton de save
-    var btn = document.createElement('button')
-    btn.innerText = "SAVE"
-    //Au click on Savegarde avec le contenu du form, on vide la source de backup,
-    //et on simule la fermeture du form avec HideFeedback de l'API de WA
-    btn.setAttribute('onclick', "CHPTeSave(CHPTeGet()); CHTESource = null; HideFeedback()")
-    
-    //Merge
-    div.appendChild(btn)
-    
-    //On affiche le tout avec ShowMessage de l'api de WA
-    ShowMessage(div.innerHTML)
-    
-    return div;
-    
-}
-
-//Recupere les entrée de CHPTeForm
-//0 Parametre
-//return -> Tableau -> [ID, TEXT, ID, TEXT]
-function CHPTeGet(){
-    //Variable de sortie
-    var ret = [];
-    
-    //Pour chaque enfant de la source
-    for (var i=0; i<CHTESource.childNodes.length; i++){
-        //On regarde si un champ pour lui existe
-        if (document.getElementById('CHPTeForm_I' + i) != undefined){
-            //On save tout
-            ret[ret.length] = i;
-            ret[ret.length] = document.getElementById('CHPTeForm_I' + i).value;
-        }
-    }
-    
-    return ret;
-}
-
-//Sauvegarde les entree de CHPTeForm
-//1 Parametre
-//entry -> Tableau -> [ID, TEXT, ID, TEXT]
-function CHPTeSave(entry){
-    //Pour chaque entrée Paire (les id)
-    for (var i=0; i < entry.length; i = i + 2){
-        //On stoque le tout dans la source
-        CHTESource.childNodes[entry[i]].textContent = entry[i+1]
-    }
-}
-
-//Lis le movement de la souris
-//1 Parametre
-//e -> objet event envoyer par le navigateur
-function CHRMove(e){
-    //Si le mode Text Edit est activé on met un repère de pointage
-    if(CHStatus == 2){
-        //Definis en tant que actuelle le pointé
-        CHTEPointAcc = e.target;
-        
-        //On restaure la couleur de l'ancien
-        CHTEPointOld.style["background-color"] = CHTEPointOldColor
-        
-        //Met l'actuelle en ancien et backup sa couleur
-        CHTEPointOld = CHTEPointAcc;
-        CHTEPointOldColor = CHTEPointAcc.style["background-color"]
-        
-        //On finit par le metre en gris
-        CHTEPointAcc.style["background-color"] = "grey"
-    }
-    //Si le mode Text Edit est déactivée et que Old n'est pas égale a sa variable offciele
-    else if(CHStatus != 2 && CHTEPointOld != document.body){
-        //On restaure la couleur de l'ancien
-        CHTEPointOld.style["background-color"] = CHTEPointOldColor
-        
-        //Et on reinit toute les variable
-        CHTEPointOld = document.body
-        CHTEPointOldColor = document.body.style['background-color']
-        CHTEPointAcc = null;
-    }
-}
-
-//Detecte le type de jeu
-//0 parametre
-//return -> le type de jeu
-//  0 -> Texte a trous
-//  1 -> Quiz
-//  2 -> QCM
-//  3 -> Mot Croisé
-function CHGType(){
-    if (typeof L === 'undefined'){
-        if (typeof I[0][1] == "string"){
-            if(I[0][3].length == 1) return 1
-            else return 2
-        }else{
-            return 0
-        }
-    }else return 3
-}
-
-//Recupere la question d'un quizz a partir de l'id (Aussi le QCM en fait...)
-//1 parametre
-//return -> la question
-//id -> id de la question
-function CHGQuizQuestion(id){
-    if (CHType == 1 || CHType == 2) return document.getElementById("Q_"+id).children[0].innerText
-}
-
-//Ouvre le formulaire d'edition d'image
-//1 Parametre
-//source -> l'image de base
-//return -> le div de base du form
-function CHPIeForm(source){
-    //On sauvegarde la source
-    CHIESource = source;
-    
-    //DIv de base
-    var maindiv = document.createElement('div');
-    maindiv.id = "CHPIeForm"
-    
-    //Texte label de URL
-    maindiv.appendChild(document.createTextNode('URL: '))
-    
-    //champ de l'url
-    var urlZone = document.createElement('input')
-    urlZone.setAttribute('type', 'text')
-    //ID CHPIeForm_url VALUE l'ancienne SRC
-    urlZone.setAttribute('id', 'CHPIeForm_url')
-    urlZone.setAttribute('value', source.src);
-    //MERGE
-    maindiv.appendChild(urlZone);
-    
-    maindiv.appendChild(document.createElement('br'));
-    
-    //Boutton de sauvegarde
-    var btnSav = document.createElement('button')
-    btnSav.appendChild(document.createTextNode("SAVE"))
-    //On savegarde et utilise HideFeedback de l'api de WabAllemend
-    btnSav.setAttribute('onClick', 'CHPIeSave();HideFeedback()')
-    maindiv.appendChild(btnSav)
-    
-    maindiv.appendChild(document.createElement('br'));
-    maindiv.appendChild(document.createElement('br'));
-    
-    //Label du champ Google
-    maindiv.appendChild(document.createTextNode('GOOGLE: '))
-    
-    //Champ Google
-    var gooZone = document.createElement('input')
-    gooZone.setAttribute('type', 'text')
-    //ID CHPIeForm_google
-    gooZone.setAttribute('id', 'CHPIeForm_google')
-    maindiv.appendChild(gooZone);
-    
-    maindiv.appendChild(document.createElement('br'));
-    
-    //BOutton de recherche
-    var btnGoo = document.createElement('button')
-    btnGoo.appendChild(document.createTextNode("RECHERCHER"))
-    //On lance une recherche depuis le champ
-    btnGoo.setAttribute('onClick', 'CHGISearch(document.getElementById("CHPIeForm_google").value)')
-    maindiv.appendChild(btnGoo)
-    
-    maindiv.appendChild(document.createElement('br'));
-    maindiv.appendChild(document.createElement('br'));
-    //Texte d'aide
-    maindiv.appendChild(document.createTextNode('Pour utliser google: faites la recherche <CLIC DROIT / Copier L\'addresse de l\'image> et coller dans URL'))
-    
-    //On affiche le tout avec l'api de Web Allemend
-    ShowMessage(maindiv.innerHTML)
-    return maindiv;
-}
-
-//Recherche sur google images
-//1 parametre
-//src -> le terme a rechercher
-function CHGISearch(src){
-    window.open("https://www.google.fr/search?safe=active&tbm=isch&q=" + encodeURIComponent(src));
-}
-
-//Sauvgarde les info de CHPIeForm
-//0 Parametre
-function CHPIeSave(){
-    CHIESource.src = document.getElementById("CHPIeForm_url").value;
-}
-
-//Return true si c'est le texte d'une réponse juste
-//return -> true juste
-//       -> false faut
-function CHGStrTBool(string){
-    if (string == DefaultRight) return true
-    else return false
-}
-
-//Parse de l'html <source http://codes-sources.commentcamarche.net/source/54146-parser-les-caracteres-html-d-une-string >
-//Mrc a eux!
-function html_encode(txt) {
-    var reg = /^[\w-\/()\[\]?!*%:;.,'\s]+$/i;
-    var s = "";
-    var l = txt.length;
-    for (var i = 0; i < l; i++) {
-        var tn = txt[i];
-        //EDIT Ajout du '
-        if (tn == "'"){
-            s+= "\\'"
-        }
-        else if (!reg.test(tn)) {
-            s += "&#" + tn.charCodeAt(0) + ";";
-        } else {
-            s += tn;
-        }
-    }
-    return s;
-}
-
-//Parse du texte de l'edit mode QCM en aurray
-//1 Parametre
-// inp -> string d'entree
-// return -> tabbleau de bool
-function CHGParseBool (inp){
-    //Retour et split par ,
-    var ret = []
-    var splited = inp.split(',')
-    
-    //on for
-    for (var i=0; i<splited.length; i++){
-        if (splited[i] == "true") ret[i] = true;
-        if (splited[i] == "false") ret[i] = false;
-    }
-    return ret
-}
-
-//Affiche les reponse pour les MC
-//1 parametre -> ans tableu de reponse
-//return -> DOM Table
-function CHPAnsMC(ans){
-    var table = document.createElement('table');
-    //Pour chaque ligne
-    for (var i=0; i<ans.length; i++){
-        ///On cree la ligne
-        var tr = document.createElement('tr');
-        //Pour chaque collone
-        for (var j=0; j<ans[i].length; j++){
-            //On cree la colone
-            var td = document.createElement('td')
-            //On met le texte
-            td.innerText = ans[i][j]
-            //On merge
-            tr.appendChild(td);
-        }
-        //On merge
-        table.appendChild(tr)
-    }
-    return table;
-}
-
-//Affchie le formulaire d'édition pour les MC
-//1 parametre -> ans tableau
-//return -> DOM Table
-function CHPEditMC(ans){
-    var table = document.createElement('table');
-    table.id = "CHPEditMC_TABLE"
-    //On fait la ligne du boutton SAVE
-    var tr = document.createElement('tr')
-    var td = document.createElement('td')
-    var btn = document.createElement('button')
-    btn.innerText = 'SAVE'
-    btn.setAttribute('onClick', "CHPEditSave(CHPEditGet());document.getElementById('CHPEditMC_TABLE').remove()");
-    //Merge
-    td.appendChild(btn)
-    td.setAttribute('colspan', ans[0].length)
-    tr.appendChild(td)
-    table.appendChild(tr)
-    //Pour chaque ligne
-    for (var i=0; i<ans.length; i++){
-        ///On cree la ligne
-        var tr = document.createElement('tr');
-        //Pour chaque collone
-        for (var j=0; j<ans[i].length; j++){
-            //On cree la colone
-            var td = document.createElement('td')
-            //On cree le champ de texte
-            var input = document.createElement('input')
-            input.setAttribute('type', 'text')
-            //On met le texte
-            input.setAttribute('value', ans[i][j])
-            //On retrecit les Input
-            input.style['width'] = '10px'
-            //on lui met un id
-            input.id = "CHPEditMCQ_" + i + "_" + j;
-            //On merge
-            td.appendChild(input);
-            tr.appendChild(td);
-        }
-        //On met un boutton RESET
-        var td = document.createElement('td')
-        var btn = document.createElement("button")
-        btn .innerText = "R"
-        //+ le onClick
-        btn.setAttribute('onClick', "CHPEditReset(" + i + ")");
-        td.appendChild(btn)
-        tr.appendChild(td)
-        //On merge
-        table.appendChild(tr)
-    }
-    return table;
-}
-
-//INIT
-CHInit()
