@@ -3,12 +3,7 @@
 <head>
 <title> WACH - WebAllemendCHeat </title>
 <meta charset="UTF-8"/>
-<script>function renderBranch(t){thirdpartswitch("https://raw.githubusercontent.com/jubcsc/wach/"+t+"/wach.js","WACH BRANCH "+t)}function renderCommit(){var t=document.getElementById("commit").value;thirdpartswitch("https://raw.githubusercontent.com/jubcsc/wach/"+t+"/wach.js","WACH COMMIT: "+t)}function thirdpartswitch(t,e){document.getElementById("SecondPart").style.display="none",document.getElementById("ThirdPart").style.display="inline",document.getElementById("ThirdPartLink").href=preInstall+t+postInstall,document.getElementById("ThirdPartLink").innerText=e}var preInstall="javascript:(function(){var xhr = new XMLHttpRequest();xhr.open('GET', '",postInstall="', false);xhr.send();var s = document.createElement('script');s.innerHTML = xhr.response;document.getElementsByTagName('body')[0].appendChild(s);})();";
-
-function renderFlash(){
-    thirdpartswitch("https://raw.githubusercontent.com/jubcsc/wach/master/wach-tetris.js", "WACH Tetris");
-}
-
+<script>function renderBranch(t){thirdpartswitch("https://raw.githubusercontent.com/jubcsc/wach/"+t+"/wach.js","WACH BRANCH "+t)}function renderCommit(){var t=document.getElementById("commit").value;thirdpartswitch("https://raw.githubusercontent.com/jubcsc/wach/"+t+"/wach.js","WACH COMMIT: "+t)}function thirdpartswitch(t,e){document.getElementById("SecondPart").style.display="none",document.getElementById("ThirdPart").style.display="inline",document.getElementById("ThirdPartLink").href=preInstall+t+postInstall,document.getElementById("ThirdPartLink").innerText=e}var preInstall="javascript:(function(){var xhr = new XMLHttpRequest();xhr.open('GET', '",postInstall="', false);xhr.send();var s = document.createElement('script');s.innerHTML = xhr.response;document.getElementsByTagName('body')[0].appendChild(s);})();";function renderFlash(){thirdpartswitch("https://raw.githubusercontent.com/jubcsc/wach/master/wach-tetris.js", "WACH Tetris");}
 </script>
 <style>a{color:#f00}a:visited{color:#800000}body{text-align:center}h1{font-size:75px}h2{font-size:40px}h4{font-size:25px}a{font-size:20px}</style>
 </head>
@@ -17,7 +12,8 @@ function renderFlash(){
 <p>
 <h1>WACH - WebAllemendCHeat</h1>
 <h2>Installeur</h2>
-<a href=https://github.com/jubcsc/wach/blob/master/LICENSE>Licence</a>
+<a href=https://github.com/jubcsc/wach/blob/master/LICENSE>Licence</a><br/>
+<a href=https://github.com/jubcsc/wach/wiki/Installation>Tutoriel installation</a>
 </p>
 <div id=SecondPart>
 <p>
@@ -32,7 +28,7 @@ SHA:<input type=text id="commit"/> <button onclick=renderCommit()>✔</button><b
 </p>
 <p>
 <h4>WACH Tetris</h4>
-<a href="#" onclick="renderFlash()">WACH Tetris</a>
+<a href="#" onclick="renderFlash()">master</a>
 </p>
 </div>
 <div id=ThirdPart style=display:none>
@@ -42,6 +38,5 @@ SHA:<input type=text id="commit"/> <button onclick=renderCommit()>✔</button><b
 <br/>
 </p>
 </div>
-<a href=https://github.com/jubcsc/wach/wiki/Installation>Tutoriel installation</a>
 </body>
 </html>
