@@ -871,7 +871,7 @@ WACHEvent.prototype.onClickSave = function () {
 			ret[i] = [];
 			for (var j = 0; j < L[i].length; j++){
 				ret[i][j] = document.getElementById
-				("WACHWindows.EditWindow.mcmethod.Q" + i + "_" + j).value;
+				("WACHWindows.EditWindow.mcmethod.Q" + i + "_" + j).value.charAt(0);
 			}
 		}
 	}//Les autre
