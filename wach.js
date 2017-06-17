@@ -815,7 +815,7 @@ function WACHEvent(){
 */
 WACHEvent.prototype.onKey = function (e) {
 	//Le œ en classique
-	if (e.keyCode == 0 && WACHInstance.status.GetStatus() == STATUS_N)
+	if ((e.keyCode == 0 || e.keyCode == 192)&& WACHInstance.status.GetStatus() == STATUS_N)
 		WACHInstance.status.SetStatus(STATUS_WAIT);
 	//Le S en wait
 	if(e.keyCode == 83 && WACHInstance.status.GetStatus() == STATUS_WAIT){
