@@ -92,6 +92,7 @@ function WACH(){
 		}
 		this.IEContainer = {
 			target: null,
+			pointAcc: null,
 		}
 }
 
@@ -896,7 +897,7 @@ WACHEvent.prototype.onClick = function(e){
 		WACHInstance.status.SetStatus(STATUS_N);
 	}
 	//En IE
-	if(WACHInstance.status.GetStatus() == STATUS_IE_WAIT){
+	if(WACHInstance.status.GetStatus() == STATUS_IE_WAIT && e.target.tagName.toLowerCase() == "img"){
 		WACHInstance.IEContainer.target = e.target;
 		WACHInstance.windows.ImageEditWindow(e.target);
 		WACHInstance.status.SetStatus(STATUS_N);
@@ -947,6 +948,17 @@ WACHEvent.prototype.onMove = function(e){
 		WACHInstance.TEContainer.pointAcc.style["background-color"] = WACHInstance.TEContainer.pointAccColor;
 		WACHInstance.TEContainer.pointAcc = document.body;
 		WACHInstance.TEContainer.pointAccColor = document.body.style["background-color"];
+	}
+
+	if (WACHInstance.status.GetStatus() == STATUS_IE_WAIT && e.target.tagName.toLowerCase() == "img"){
+		if(WACHInstance.IEContainer.pointAcc != null)
+			WACHInstance.IEContainer.pointAcc.style["border"] = "";
+		WACHInstance.IEContainer.pointAcc = e.target;
+		e.target.style["border"] = "10px solid grey";
+	}
+	else if (WACHInstance.status.GetStatus() != STATUS_IE_WAIT && WACHInstance.IEContainer.pointAcc != null){
+		WACHInstance.IEContainer.pointAcc.style["border"] = "";
+		WACHInstance.IEContainer.pointAcc = null;
 	}
 }
 
