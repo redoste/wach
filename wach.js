@@ -13,7 +13,7 @@ WACH WebAllemendCHeat: a cheat tool for WebAllemend
   -> http://steph.raymond.free.fr/              WebAllemend
   -> https://www.gnu.org/licenses/gpl-3.0.txt   Liscence
 
-Copyright © 2017 reDOSte
+Copyright © 2017-2019 reDOSte
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -40,11 +40,11 @@ var WACHInstance = null, WACHUtil = null;
 
 //Welcome Texte
 const welcomeText=decodeURIComponent("%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0A%20%20%20%20%20%20%20%20%20%20%20_____%20%20%20____%20%20%20_____%20_%0A%20%20%20%20%20%20%20%20%20%20%7C%20%20__%20%5C%20%2F%20__%20%5C%20%2F%20____%7C%20%7C%0A%20%20_%20__%20___%7C%20%7C%20%20%7C%20%7C%20%7C%20%20%7C%20%7C%20(___%20%7C%20%7C_%20___%0A%20%7C%20%27__%2F%20_%20%5C%20%7C%20%20%7C%20%7C%20%7C%20%20%7C%20%7C%5C___%20%5C%7C%20__%2F%20_%20%5C%0A%20%7C%20%7C%20%7C%20%20__%2F%20%7C__%7C%20%7C%20%7C__%7C%20%7C____)%20%7C%20%7C%7C%20%20__%2F%0A%20%7C_%7C%20%20%5C___%7C_____%2F%20%5C____%2F%7C_____%2F%20%5C__%5C___%7C%0A%0A%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D\
-%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0AWACH%20WebAllemendCHeat%3A%20a%20cheat%20tool%20for%20WebAllemend%0A%20%20-%3E%20http%3A%2F%2Fredoste.fr.nf%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20WEBSITE%0A%20%20-%3E%20http%3A%2F%2Fredoste.byethost7.com%2F0ch%2Fwa%20%20%20%20%20%20%20%20Offcial%20Program%20page%0A%20%20-%3E%20http%3A%2F%2Fsteph.raymond.free.fr%2F%20%20%20%20%20%20%20%20%20%20%20%20%20%20WebAllemend%0A%20%20-%3E%20https%3A%2F%2Fwww.gnu.org%2Flicenses%2Fgpl-3.0.txt%20%20%20Liscence%0A%0ACopyright%20(C)%202017%20reDOSte%0A%0AThis%20program%20is%20free%20software%3B%20you%20can%20redistribute%20it%20and%2For%0Amodify%20it%20under%20the%20terms%20of%20the%20GNU%20General%20Public%20License%0Aas%20published%20by%20the%20Free%20Software%20Foundation%3B%20either%20version%202%0Aof%20the%20License%2C%20or%20(at%20your%20option)%20any%20later%20version.%0A%0AThis%20program%20is%20distributed%20in%20the%20hope%20that%20it%20will%20be%20useful%2C%0Ab\
+%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%0AWACH%20WebAllemendCHeat%3A%20a%20cheat%20tool%20for%20WebAllemend%0A%20%20-%3E%20http%3A%2F%2Fredoste.fr.nf%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20WEBSITE%0A%20%20-%3E%20http%3A%2F%2Fredoste.byethost7.com%2F0ch%2Fwa%20%20%20%20%20%20%20%20Offcial%20Program%20page%0A%20%20-%3E%20http%3A%2F%2Fsteph.raymond.free.fr%2F%20%20%20%20%20%20%20%20%20%20%20%20%20%20WebAllemend%0A%20%20-%3E%20https%3A%2F%2Fwww.gnu.org%2Flicenses%2Fgpl-3.0.txt%20%20%20Liscence%0A%0ACopyright%20(C)%202017-2019%20reDOSte%0A%0AThis%20program%20is%20free%20software%3B%20you%20can%20redistribute%20it%20and%2For%0Amodify%20it%20under%20the%20terms%20of%20the%20GNU%20General%20Public%20License%0Aas%20published%20by%20the%20Free%20Software%20Foundation%3B%20either%20version%202%0Aof%20the%20License%2C%20or%20(at%20your%20option)%20any%20later%20version.%0A%0AThis%20program%20is%20distributed%20in%20the%20hope%20that%20it%20will%20be%20useful%2C%0Ab\
 t%20WITHOUT%20ANY%20WARRANTY%3B%20without%20even%20the%20implied%20warranty%20of%0AMERCHANTABILITY%20or%20FITNESS%20FOR%20A%20PARTICULAR%20PURPOSE.%20%20See%20the%0AGNU%20General%20Public%20License%20for%20more%20details.%0A%0AYou%20should%20have%20received%20a%20copy%20of%20the%20GNU%20General%20Public%20License%0Aalong%20with%20this%20program%3B%20if%20not%2C%20write%20to%20the%20Free%20Software%0AFoundation%2C%20Inc.%2C%2051%20Franklin%20Street%2C%20Fifth%20Floor%2C%20Boston%2C%20MA%20%2002110-1301%2C%20USA.");
 
 //Version de WACH
-const WACH_VERSION = "WACH_STABLE_1.0";
+const WACH_VERSION = "WACH_STABLE_1.1";
 
 //Type de jeu
 const TYPE_TAT = 0; 	//Texte a trous
@@ -815,7 +815,7 @@ function WACHEvent(){
 */
 WACHEvent.prototype.onKey = function (e) {
 	//Le œ en classique
-	if ((e.keyCode == 0 || e.keyCode == 192)&& WACHInstance.status.GetStatus() == STATUS_N)
+	if ((e.keyCode == 0 || e.keyCode == 192 || e.keyCode == 176 || e.key == "²") && WACHInstance.status.GetStatus() == STATUS_N)
 		WACHInstance.status.SetStatus(STATUS_WAIT);
 	//Le S en wait
 	if(e.keyCode == 83 && WACHInstance.status.GetStatus() == STATUS_WAIT){
